@@ -1,0 +1,7 @@
+h1 Answer to the question "#{@question.title}"
+
+div.mb-5
+  div.fw-bold Answer body
+  = @answer.body.html_safe
+
+= link_to 'Назад к вопросу', question_path(@question), class: 'btn btn-primary'
