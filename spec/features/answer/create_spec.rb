@@ -20,6 +20,7 @@ feature 'User can write an answer', %q(
       click_on 'Answer'
 
       expect(current_path).to eq question_path(question)
+      expect(page).to have_content 'Answer has been created successfully.'
 
       within '.answers' do
         expect(page).to have_content 'Text text text'

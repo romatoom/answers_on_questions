@@ -22,7 +22,7 @@ feature 'User can create question', %q(
       click_on 'Ask'
 
       expect(current_path).to eq question_path(user.questions.last)
-      expect(page).to have_content 'Your question successfully created.'
+      expect(page).to have_content 'Question has been created successfully.'
 
       within '.question' do
         expect(page).to have_content 'Test question'

@@ -1,19 +1,18 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[new show]
+  before_action :authenticate_user!, except: %i[new create show]
   before_action :set_question
   before_action :set_answer, only: %i[show destroy]
 
   def show; end
 
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.author = current_user
-
-    if @answer.save
-      redirect_to @question, success: 'Answer has been created successfully.'
-    else
-      render 'questions/show'
+    if current_user.nil?
+      redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated')
     end
+
+    @answer = @question.answers.new(answer_params.merge(author: current_user))
+
+    flash.now[:success] = 'Answer has been created successfully.' if @answer.save
   end
 
   def destroy

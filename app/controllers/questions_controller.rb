@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
     @question.author = current_user
 
     if @question.save
-      redirect_to question_path(@question), success: 'Your question successfully created.'
+      redirect_to question_path(@question), success: 'Question has been created successfully.'
     else
       render :new
     end

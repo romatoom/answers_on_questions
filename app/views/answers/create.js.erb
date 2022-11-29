@@ -1,1 +1,9 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+
+$('.create-answer-area').wrap("<div class='field_with_errors'></div>");
+
+<% if @answer.persisted? %>
+  $('.answers').append('<%= j render @answer %>');
+  $('#answer_body').val('');
+  $('body').append('<div class="alert alert-success mb-0">Answer has been created successfully.</div>');
+<% end %>

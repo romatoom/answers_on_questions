@@ -12,7 +12,8 @@ RSpec.describe AnswersController, type: :controller do
       post :create, params: {
         question_id: question.id,
         author_id: user.id,
-        answer: attributes_for(:answer)
+        answer: attributes_for(:answer),
+        format: :js
       }
     end
 
@@ -20,7 +21,8 @@ RSpec.describe AnswersController, type: :controller do
       post :create, params: {
         question_id: question.id,
         author_id: user.id,
-        answer: attributes_for(:answer, :invalid)
+        answer: attributes_for(:answer, :invalid),
+        format: :js
       }
     end
 
@@ -32,9 +34,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { create_with_valid_attributes }.to change(Answer, :count).by(1)
         end
 
-        it 'redirects to question show' do
+        it 'render create view' do
           create_with_valid_attributes
-          expect(response).to redirect_to question_path(question)
+          expect(response).to render_template :create
         end
       end
 
@@ -43,9 +45,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { create_with_invalid_attributes }.to_not change(Answer, :count)
         end
 
-        it 're-renders new view' do
+        it 'render create view' do
           create_with_invalid_attributes
-          expect(response).to render_template 'questions/show'
+          expect(response).to render_template :create
         end
       end
     end

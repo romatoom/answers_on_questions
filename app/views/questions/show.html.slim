@@ -9,18 +9,13 @@ div.question
     div.fw-bold Body
     = @question.body.html_safe
 
-div.mb-3
+div.mb3
   div.fw-bold Answers
-  - if @question.answers.count.positive?
-    ul.answers.mb-3
-      - @question.answers.each do |answer|
-        - if answer.persisted?
-          li
-            = answer.body.html_safe
-            - if answer.author == current_user
-              = button_to 'Remove', question_answer_path(@question, answer), method: :delete, class: 'btn btn-danger remove_answer_btn'
-  - else
-    div.mb-3 No answers
+  ul.answers.mb-3
+    - if @question.answers.count.positive?
+      = render @question.answers
+    - else
+      'No answers
 
   div.answer-errors
     = render 'shared/errors', resource: @answer
@@ -28,7 +23,7 @@ div.mb-3
   = form_with model: [@question, @answer], local: false do |f|
     div.mb-2
       = f.label :body, 'You can answer the question here', class: 'form-label'
-      = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
+      = f.text_area :body, id: :answer_body, rows: 10, class: 'create-answer-area form-control'
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'
