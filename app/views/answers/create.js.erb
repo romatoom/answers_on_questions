@@ -1,6 +1,7 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-
-$('.create-answer-area').wrap("<div class='field_with_errors'></div>");
+<% if @answer.errors.present? %>
+  $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+  $('.create-answer-area').wrap("<div class='field_with_errors'></div>");
+<% end%>
 
 <% if @answer.persisted? %>
   $('.answers').append('<%= j render @answer %>');

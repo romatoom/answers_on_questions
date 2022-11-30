@@ -6,13 +6,9 @@ class AnswersController < ApplicationController
   def show; end
 
   def create
-    if current_user.nil?
-      redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated')
-    end
+    redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    @answer = @question.answers.new(answer_params.merge(author: current_user))
-
-    flash.now[:success] = 'Answer has been created successfully.' if @answer.save
+    @answer = @question.answers.create(answer_params.merge(author: current_user))
   end
 
   def destroy

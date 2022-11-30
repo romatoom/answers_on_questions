@@ -1,3 +1,7 @@
+.form-control.error {
+  border-color: #ff3333
+}
+
 .field_with_errors {
   &>.form-control {
     border-color: #ff3333

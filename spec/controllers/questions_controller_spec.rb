@@ -91,6 +91,76 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
+
+    let!(:question_of_author) { create(:question, author: author) }
+
+    subject(:update) do
+      patch :update, params: {
+        id: question_of_author,
+        question: { title: "New title", body: "New body" },
+        format: :js
+      }
+    end
+
+    subject(:update_with_invalid_attributes) do
+      patch :update, params: {
+        id: question_of_author,
+        question: attributes_for(:question, :invalid),
+        format: :js
+      }
+    end
+
+    context 'with question author' do
+      before { login(author) }
+
+      context 'with valid attributes' do
+        before { update }
+
+        it 'change question attributes' do
+          question_of_author.reload
+
+          expect(question_of_author.title).to eq 'New title'
+          expect(question_of_author.body).to eq 'New body'
+        end
+
+        it 'render update view' do
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'not change question attributes' do
+          expect { update_with_invalid_attributes }.to_not change { question_of_author.reload.title }
+          expect { update_with_invalid_attributes }.to_not change { question_of_author.reload.body }
+        end
+
+        it 'render update view' do
+          update_with_invalid_attributes
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'with not question author' do
+      before { login(not_author) }
+
+      it 'not changes the question attributes' do
+        expect { update }.to_not change { question_of_author.reload.title }
+        expect { update }.to_not change { question_of_author.reload.body }
+      end
+    end
+
+    context 'with not-autorized user' do
+      it 'not changes the question attributes' do
+        expect { update }.to_not change { question_of_author.reload.title }
+        expect { update }.to_not change { question_of_author.reload.body }
+      end
+    end
+  end
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
 

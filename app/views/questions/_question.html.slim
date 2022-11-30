@@ -1,0 +1,15 @@
+li id="question_#{question.id}"
+  = link_to question.title, question_path(question)
+  - if question.author == current_user
+    = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
+    = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { question_id: question.id }
+    = form_with model: question, method: :patch, local: false, class: 'edit_question_form d-none', html: { id: "edit-question-form-#{question.id}" } do |f|
+      div.question_errors
+        = render 'shared/errors', resource: question
+      div.mb-2
+        = f.label :title, 'Title', class: 'form-label'
+        = f.text_field :title, id: :question_title, class: 'form-control'
+      div.mb-3
+        = f.label :body, 'Body', class: 'form-label'
+        = f.text_area :body, id: :question_body, rows: 10, class: 'form-control'
+      = f.submit 'Save', class: 'btn btn-success'

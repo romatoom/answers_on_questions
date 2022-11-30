@@ -3,5 +3,15 @@ ul {
 
   &>li {
     list-style: none;
+    margin-bottom: 20px;
+  }
+}
+
+.question_errors,
+.answer_errors {
+  margin-bottom: 20px;
+
+  &>ul>li {
+    margin-bottom: 0;
   }
 }
