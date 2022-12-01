@@ -69,6 +69,74 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
+
+    let!(:answer_of_author) { create(:answer, author: author) }
+
+    subject(:update) do
+      patch :update, params: {
+        question_id: answer_of_author.question,
+        id: answer_of_author,
+        answer: { body: "New body" },
+        format: :js
+      }
+    end
+
+    subject(:update_with_invalid_attributes) do
+      patch :update, params: {
+        question_id: answer_of_author.question,
+        id: answer_of_author,
+        answer: attributes_for(:answer, :invalid),
+        format: :js
+      }
+    end
+
+    context 'with answer author' do
+      before { login(author) }
+
+      context 'with valid attributes' do
+        before { update }
+
+        it 'change answer attributes' do
+          answer_of_author.reload
+
+          expect(answer_of_author.body).to eq 'New body'
+        end
+
+        it 'render update view' do
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'not change answer attributes' do
+          expect { update_with_invalid_attributes }.to_not change { answer_of_author.reload.body }
+        end
+
+        it 'render update view' do
+          update_with_invalid_attributes
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'with not answer author' do
+      before { login(not_author) }
+
+      it 'not changes the answer attributes' do
+        expect { update }.to_not change { answer_of_author.reload.body }
+      end
+    end
+
+    context 'with not-autorized user' do
+      it 'not changes the answer attributes' do
+        expect { update }.to_not change { answer_of_author.reload.body }
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     before { create_list(:answer, 3) }
     let!(:answer) { create(:answer) }

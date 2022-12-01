@@ -18,12 +18,12 @@ feature 'The author can edit his question', %q(
       end
 
       scenario 'can edit question', js: true do
-        expect(page).to have_selector('.edit_question_form', visible: false)
+        expect(page).to have_selector('.edit_form', visible: false)
 
         find('.edit_question_btn').click
 
         expect(page).to have_selector('.edit_question_btn', visible: false)
-        expect(page).to have_selector('.edit_question_form', visible: true)
+        expect(page).to have_selector('.edit_form', visible: true)
 
         fill_in 'Title', with: 'New question title'
         fill_in 'Body', with: 'New question body'
@@ -31,7 +31,7 @@ feature 'The author can edit his question', %q(
         click_on 'Save'
 
         expect(page).to have_selector('.edit_question_btn', visible: true)
-        expect(page).to have_selector('.edit_question_form', visible: false)
+        expect(page).to have_selector('.edit_form', visible: false)
 
         expect(page).to have_content('Question has been edited successfully.')
 
@@ -40,13 +40,13 @@ feature 'The author can edit his question', %q(
         end
       end
 
-      scenario 'try edit answer with errors', js: true do
-        expect(page).to have_selector('.edit_question_form', visible: false)
+      scenario 'try edit question with errors', js: true do
+        expect(page).to have_selector('.edit_form', visible: false)
 
         find('.edit_question_btn').click
 
         expect(page).to_not have_selector('.edit_question_btn')
-        expect(page).to have_selector('.edit_question_form')
+        expect(page).to have_selector('.edit_form')
 
         fill_in 'Title', with: ''
         fill_in 'Body', with: ''
@@ -68,7 +68,7 @@ feature 'The author can edit his question', %q(
     end
   end
 
-  scenario "Unuthenticated question author can't edit an question", js: true do
+  scenario "Unuthenticated user can't edit an question", js: true do
     visit questions_path
 
     expect(page).to_not have_selector('.edit_question_btn')

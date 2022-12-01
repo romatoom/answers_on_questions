@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[new create show]
+  before_action :authenticate_user!, except: %i[new create show update]
   before_action :set_question
-  before_action :set_answer, only: %i[show destroy]
+  before_action :set_answer, only: %i[show update destroy]
 
   def show; end
 
@@ -9,6 +9,12 @@ class AnswersController < ApplicationController
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
     @answer = @question.answers.create(answer_params.merge(author: current_user))
+  end
+
+  def update
+    redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
+
+    @answer.update(answer_params) if current_user == @answer.author
   end
 
   def destroy

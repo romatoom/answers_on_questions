@@ -23,7 +23,7 @@ div.mb3
   = form_with model: [@question, @answer], local: false do |f|
     div.mb-2
       = f.label :body, 'You can answer the question here', class: 'form-label'
-      = f.text_area :body, id: :answer_body, rows: 10, class: 'create-answer-area form-control'
+      = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

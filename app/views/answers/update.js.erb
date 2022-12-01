@@ -1,0 +1,7 @@
+<% if @answer.errors.present? %>
+  $('.answer_errors').html('<%= render 'shared/errors', resource: @answer %>');
+  $('#answer_body').addClass('error');
+<% else %>
+  $('#answer_<%= @answer.id %>').replaceWith('<%= j render @answer %>');
+  $('body').append('<div class="alert alert-success mb-0">Answer has been edited successfully.</div>');
+<% end %>
