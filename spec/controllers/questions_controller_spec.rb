@@ -176,13 +176,19 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { create_list(:question, 3) }
-    let!(:question) { create(:question) }
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
 
-    subject(:delete_question) { delete :destroy, params: { id: question.id } }
+    let!(:question) { create(:question, author: author) }
 
-    context 'with authenticated user' do
-      before { login(user) }
+    before { create_list(:question, 3, author: author) }
+
+    subject(:delete_question) do
+      delete :destroy, params: { id: question.id }
+    end
+
+    context 'with author of question' do
+      before { login(author) }
 
       it 'number of questions decreased by 1' do
         expect { delete_question }.to change(Question, :count).by(-1)
@@ -191,6 +197,14 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirect to questions show' do
         delete_question
         expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'with not author of question' do
+      before { login(not_author) }
+
+      it 'number of questions not change' do
+        expect { delete_question }.to_not change(Question, :count)
       end
     end
 

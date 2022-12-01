@@ -1,0 +1,8 @@
+<% if @answer.destroyed? %>
+  $('#answer_<%= @answer.id %>').remove();
+  $('body').append('<div class="alert alert-success mb-0">Answer has been removed successfully.</div>');
+
+  <% if @question.answers.count.zero? %>
+    $('.answers').append('<span class="no-answers">No answers</span>');
+  <% end %>
+<% end %>

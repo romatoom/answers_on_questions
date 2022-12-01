@@ -138,23 +138,35 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { create_list(:answer, 3) }
-    let!(:answer) { create(:answer) }
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
+
+    let!(:answer) { create(:answer, author: author) }
+
+    before { create_list(:answer, 3, author: author) }
 
     subject(:delete_answer) do
-      delete :destroy, params: { question_id: question.id, id: answer.id }
+      delete :destroy, params: { question_id: question.id, id: answer.id, format: :js }
     end
 
-    context 'with authenticated user' do
-      before { login(user) }
+    context 'with author of answer' do
+      before { login(author) }
 
       it 'number of answers decreased by 1' do
         expect { delete_answer }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirect to question show' do
+      it 'render view destroy' do
         delete_answer
-        expect(response).to redirect_to question_path(question)
+        expect(response).to render_template :destroy
+      end
+    end
+
+    context 'with not author of answer' do
+      before { login(not_author) }
+
+      it 'number of answers not change' do
+        expect { delete_answer }.to_not change(Answer, :count)
       end
     end
 

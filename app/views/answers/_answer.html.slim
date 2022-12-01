@@ -1,7 +1,7 @@
 li id="answer_#{answer.id}"
   = answer.body.html_safe
   - if answer.author == current_user
-    = button_to 'Remove', question_answer_path(@question, answer), method: :delete, class: 'btn btn-danger remove_answer_btn'
+    = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
     = form_with model: [@question, answer], method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
       div.answer_errors

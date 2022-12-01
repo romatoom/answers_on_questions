@@ -15,13 +15,13 @@ div.mb3
     - if @question.answers.count.positive?
       = render @question.answers
     - else
-      'No answers
+      span.no-answers No answers
 
   div.answer-errors
     = render 'shared/errors', resource: @answer
 
   = form_with model: [@question, @answer], local: false do |f|
-    div.mb-2
+    div.answer-new.mb-2
       = f.label :body, 'You can answer the question here', class: 'form-label'
       = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
 
