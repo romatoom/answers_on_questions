@@ -174,4 +174,62 @@ RSpec.describe AnswersController, type: :controller do
       expect { delete_answer }.to_not change(Answer, :count)
     end
   end
+
+  describe 'POST #mark_best_answer' do
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
+
+    let!(:question_of_author) { create(:question, author: author) }
+    let!(:answer1) { create(:answer, question: question_of_author) }
+    let!(:answer2) { create(:answer, question: question_of_author) }
+
+    subject(:mark_best_answer) do
+      post :mark_answer_as_best, params: { question_id: question_of_author.id, id: answer1.id, format: :js }
+    end
+
+    context 'with author of question' do
+      before { login(author) }
+
+      context 'if not have best answer' do
+        it 'mark best answer' do
+          expect { mark_best_answer }.to change { answer1.reload.best }.from(false).to(true)
+        end
+
+        it "don't' mark other as best answer" do
+          expect { mark_best_answer }.to_not change { answer2.reload.best }
+        end
+      end
+
+      context 'if also have best answer' do
+        let!(:answer1) { create(:answer, question: question_of_author) }
+        let!(:answer2) { create(:answer, question: question_of_author, best: true) }
+
+        it 'mark new best answer' do
+          expect { mark_best_answer }.to change { answer1.reload.best }.from(false).to(true)
+        end
+
+        it 'unmark previous best answer' do
+          expect { mark_best_answer }.to change { answer2.reload.best }.from(true).to(false)
+        end
+      end
+    end
+
+    context 'with not author of question' do
+      before { login(not_author) }
+
+      it "don't mark any as best answer" do
+        mark_best_answer
+        expect(answer1.reload.best).to be false
+        expect(answer2.reload.best).to be false
+      end
+    end
+
+    context 'with unauthenticated user' do
+      it "don't mark any as best answer" do
+        mark_best_answer
+        expect(answer1.reload.best).to be false
+        expect(answer2.reload.best).to be false
+      end
+    end
+  end
 end

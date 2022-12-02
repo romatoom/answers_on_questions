@@ -1,7 +1,8 @@
 h1 Create question
 
-= form_with model: @question, local: false do |f|
-  = render 'shared/errors', resource: @question
+= form_with model: @question do |f|
+  div.question-errors
+    = render 'shared/errors', resource: @question
 
   div.mb-3
     = f.label :title, 'Title', class: 'form-label'

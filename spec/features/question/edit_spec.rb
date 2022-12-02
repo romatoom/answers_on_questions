@@ -53,7 +53,7 @@ feature 'The author can edit his question', %q(
 
         click_on 'Save'
 
-        within '.question_errors' do
+        within '.question-errors' do
           expect(page).to have_content ("Title can't be blank")
           expect(page).to have_content ("Body can't be blank")
         end

@@ -51,7 +51,7 @@ feature 'The author can edit his answer', %q(
 
         click_on 'Save'
 
-        within '.answer_errors' do
+        within '.answer-errors' do
           expect(page).to have_content ("Body can't be blank")
         end
       end

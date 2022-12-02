@@ -7,8 +7,15 @@ ul {
   }
 }
 
-.question_errors,
-.answer_errors {
+.question-errors {
+  margin-bottom: 20px;
+
+  &>ul>li {
+    margin-bottom: 0;
+  }
+}
+
+.answer-errors {
   margin-bottom: 20px;
 
   &>ul>li {

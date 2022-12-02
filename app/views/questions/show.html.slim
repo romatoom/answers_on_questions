@@ -12,18 +12,18 @@ div.question
 div.mb3
   div.fw-bold Answers
   ul.answers.mb-3
-    - if @question.answers.count.positive?
-      = render @question.answers
+    - if @answers
+      = render @answers
     - else
       span.no-answers No answers
 
-  div.answer-errors
-    = render 'shared/errors', resource: @answer
+  = form_with model: [@question, @answer], local: false, class: 'create-answer-form' do |f|
+    div.answer-errors
+      = render 'shared/errors', resource: @answer
 
-  = form_with model: [@question, @answer], local: false do |f|
     div.answer-new.mb-2
       = f.label :body, 'You can answer the question here', class: 'form-label'
-      = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
+      = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control create-answer-area'
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

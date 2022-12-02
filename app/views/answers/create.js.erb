@@ -1,11 +1,14 @@
 <% if @answer.errors.present? %>
-  $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-  $('.create-answer-area').wrap("<div class='field_with_errors'></div>");
+  $('.create-answer-form .answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+  $('.create-answer-area').addClass('error');
 <% end%>
 
 <% if @answer.persisted? %>
+  $('.create-answer-form .answer-errors').html('')
+  $('.create-answer-area').removeClass('error');
   $('.no-answers').remove();
   $('.answers').append('<%= j render @answer %>');
   $('.answer-new #answer_body').val('');
-  $('body').append('<div class="alert alert-success mb-0">Answer has been created successfully.</div>');
+
+  addAlert('Answer has been created successfully.', 'success');
 <% end %>
