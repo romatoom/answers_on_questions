@@ -1,6 +1,6 @@
 h1 Question
 
-div.question
+div.question.mb-5
   div.mb-3
     div.fw-bold Title
     = @question.title
@@ -9,11 +9,16 @@ div.question
     div.fw-bold Body
     = @question.body.html_safe
 
-  - if @question.files.attached?
-    - @question.files.each do |file|
-      p= link_to file.filename.to_s, url_for(file)
+  div
+    'Files:
+    - if @question.files.attached?
+      - @question.files.each do |file|
+        = link_to file.filename.to_s, url_for(file)
+        '&nbsp;
+    - else
+      'Not attached
 
-div.mb3
+div.mb-5
   div.fw-bold Answers
   ul.answers.mb-3
     - if @answers
@@ -21,6 +26,7 @@ div.mb3
     - else
       span.no-answers No answers
 
+div
   = form_with model: [@question, @answer], local: false, class: 'create-answer-form' do |f|
     div.answer-errors
       = render 'shared/errors', resource: @answer
@@ -28,6 +34,10 @@ div.mb3
     div.answer-new.mb-2
       = f.label :body, 'You can answer the question here', class: 'form-label'
       = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control create-answer-area'
+
+    div.mb-2
+      = f.label :files, 'File(s)', class: 'form-label'
+      = f.file_field :files, id: :answer_files, class: 'form-control form-control-sm', multiple: true
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

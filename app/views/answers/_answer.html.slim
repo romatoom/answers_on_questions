@@ -2,6 +2,16 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
   - if answer.best
     div.text-success.mb-2 Best answer
   = answer.body.html_safe
+
+  div.mb-3
+    'Files:
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        = link_to file.filename.to_s, url_for(file)
+        '&nbsp;
+    - else
+      'Not attached
+
   - if answer.author == current_user
     = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
