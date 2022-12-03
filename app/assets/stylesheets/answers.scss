@@ -1,0 +1,9 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/_variables.scss";
+
+.answers>.best {
+  padding: 20px;
+  background-color: $teal-100;
+  border: 1px solid $teal-200;
+  border-radius: 6px;
+}

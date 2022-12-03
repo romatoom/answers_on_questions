@@ -1,0 +1,17 @@
+<% if @answer.best %>
+  <% if @best_answer %>
+    $('<%= "#answer_#{@answer.id}" %>').replaceWith('<%= j render @best_answer %>');
+    $('<%= "#answer_#{@best_answer.id}" %>').remove();
+
+    $('<%= ".answers" %>').prepend('<%= j render @answer %>');
+    $('<%= "#answer_#{@answer.id}" %>').addClass('best');
+  <% else %>
+    $('<%= "#answer_#{@answer.id}" %>').remove();
+    $('<%= ".answers" %>').prepend('<%= j render @answer %>');
+    $('<%= "#answer_#{@answer.id}" %>').addClass('best');
+  <% end %>
+
+  addAlert('Answer successfully marked as best.', 'success');
+<% end %>
+
+

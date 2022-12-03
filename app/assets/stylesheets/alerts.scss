@@ -1,8 +1,12 @@
-.alert {
+.alerts {
   position: fixed;
   top: 10px;
   right: 10px;
   width: 100%;
   max-width: 350px;
   z-index: 1000;
+}
+
+.alert {
+  margin-bottom: 5px;
 }

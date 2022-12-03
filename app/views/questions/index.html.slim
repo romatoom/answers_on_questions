@@ -1,9 +1,6 @@
 h1 A list of questions
 
 ul.questions.mb-5
-  - @questions.each do |question|
-    li #{link_to question.title, question_path(question)}
-    - if question.author == current_user
-      = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
+  = render @questions
 
 = link_to 'Ask question', new_question_path, class: 'btn btn-primary'

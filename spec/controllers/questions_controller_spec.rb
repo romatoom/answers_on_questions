@@ -91,6 +91,76 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
+
+    let!(:question_of_author) { create(:question, author: author) }
+
+    subject(:update) do
+      patch :update, params: {
+        id: question_of_author,
+        question: { title: "New title", body: "New body" },
+        format: :js
+      }
+    end
+
+    subject(:update_with_invalid_attributes) do
+      patch :update, params: {
+        id: question_of_author,
+        question: attributes_for(:question, :invalid),
+        format: :js
+      }
+    end
+
+    context 'with question author' do
+      before { login(author) }
+
+      context 'with valid attributes' do
+        before { update }
+
+        it 'change question attributes' do
+          question_of_author.reload
+
+          expect(question_of_author.title).to eq 'New title'
+          expect(question_of_author.body).to eq 'New body'
+        end
+
+        it 'render update view' do
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'not change question attributes' do
+          expect { update_with_invalid_attributes }.to_not change { question_of_author.reload.title }
+          expect { update_with_invalid_attributes }.to_not change { question_of_author.reload.body }
+        end
+
+        it 'render update view' do
+          update_with_invalid_attributes
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'with not question author' do
+      before { login(not_author) }
+
+      it 'not changes the question attributes' do
+        expect { update }.to_not change { question_of_author.reload.title }
+        expect { update }.to_not change { question_of_author.reload.body }
+      end
+    end
+
+    context 'with not-autorized user' do
+      it 'not changes the question attributes' do
+        expect { update }.to_not change { question_of_author.reload.title }
+        expect { update }.to_not change { question_of_author.reload.body }
+      end
+    end
+  end
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
 
@@ -106,13 +176,19 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { create_list(:question, 3) }
-    let!(:question) { create(:question) }
+    let!(:author) { create(:user) }
+    let!(:not_author) { create(:user) }
 
-    subject(:delete_question) { delete :destroy, params: { id: question.id } }
+    let!(:question) { create(:question, author: author) }
 
-    context 'with authenticated user' do
-      before { login(user) }
+    before { create_list(:question, 3, author: author) }
+
+    subject(:delete_question) do
+      delete :destroy, params: { id: question.id }
+    end
+
+    context 'with author of question' do
+      before { login(author) }
 
       it 'number of questions decreased by 1' do
         expect { delete_question }.to change(Question, :count).by(-1)
@@ -121,6 +197,14 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirect to questions show' do
         delete_question
         expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'with not author of question' do
+      before { login(not_author) }
+
+      it 'number of questions not change' do
+        expect { delete_question }.to_not change(Question, :count)
       end
     end
 

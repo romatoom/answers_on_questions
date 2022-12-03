@@ -1,0 +1,10 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/_variables.scss";
+
+.edit_form {
+  margin-top: 10px;
+  border-radius: 6px;
+  padding: 30px;
+  border: 1px solid $gray-200;
+  background-color: $gray-100;
+}

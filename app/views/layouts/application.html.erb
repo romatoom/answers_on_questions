@@ -11,7 +11,10 @@
   </head>
 
   <body>
-    <%= flash_block %>
+    <div class="alerts">
+      <%= flash_block %>
+    </div>
+    
     <%= render 'shared/header' %>
     <div class="container pt-5">
       <%= yield %>

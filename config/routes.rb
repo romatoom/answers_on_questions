@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :questions, only: %i[new create show index destroy] do
-    resources :answers, only: %i[create show destroy]
+  resources :questions, only: %i[new create update show index destroy] do
+    resources :answers, only: %i[create update show destroy] do
+      post :mark_answer_as_best, on: :member
+    end
   end
 end
