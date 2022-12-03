@@ -1,5 +1,15 @@
 li id="question_#{question.id}"
   = link_to question.title, question_path(question)
+
+  div.mb-2
+    'Files:
+    - if question.files.attached?
+      - question.files.each do |file|
+        = link_to file.filename.to_s, url_for(file)
+        '&nbsp;
+    - else
+      'Not attached
+
   - if question.author == current_user
     = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
     = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { question_id: question.id }
@@ -13,5 +23,17 @@ li id="question_#{question.id}"
       div.mb-3
         = f.label :body, 'Body', class: 'form-label'
         = f.text_area :body, id: :question_body, rows: 10, class: 'form-control'
+      div.mb-3
+        div.mb2
+          'Files:
+          - if question.files.attached?
+            - question.files.each do |file|
+              = link_to file.filename.to_s, url_for(file)
+              '&nbsp;
+          - else
+            'Not attached
+        = f.label :files, 'Add more file(s)', class: 'form-label'
+        = f.file_field :files, id: :question_files, class: 'form-control form-control-sm', multiple: true
+
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-question', data: { question_id: question.id }

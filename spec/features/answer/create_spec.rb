@@ -29,12 +29,12 @@ feature 'User can write an answer', %q(
 
     scenario 'can write an answer with attached files', js: true do
       fill_in 'You can answer the question here', with: 'Text text text'
-      attach_file 'File(s)', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      attach_file 'File(s)', ["#{Rails.root}/spec/files_for_active_storage/file-1.txt", "#{Rails.root}/spec/files_for_active_storage/file-2.txt"]
       click_on 'Answer'
 
       within '.answers' do
-        expect(page).to have_link 'rails_helper.rb'
-        expect(page).to have_link 'spec_helper.rb'
+        expect(page).to have_link 'file-1.txt'
+        expect(page).to have_link 'file-2.txt'
       end
     end
 

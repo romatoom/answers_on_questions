@@ -40,6 +40,30 @@ feature 'The author can edit his question', %q(
         end
       end
 
+      scenario 'can add files when editing question', js: true do
+        find('.edit_question_btn').click
+
+        attach_file 'Add more file(s)', ["#{Rails.root}/spec/files_for_active_storage/file-1.txt", "#{Rails.root}/spec/files_for_active_storage/file-2.txt"]
+        click_on 'Save'
+
+        within("#question_#{question.id}") do
+          expect(page).to have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+        end
+
+        find('.edit_question_btn').click
+
+        attach_file 'Add more file(s)', ["#{Rails.root}/spec/files_for_active_storage/file-3.txt", "#{Rails.root}/spec/files_for_active_storage/file-4.txt"]
+        click_on 'Save'
+
+        within("#question_#{question.id}") do
+          expect(page).to have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+          expect(page).to have_link 'file-3.txt'
+          expect(page).to have_link 'file-4.txt'
+        end
+      end
+
       scenario 'try edit question with errors', js: true do
         expect(page).to have_selector('.edit_form', visible: false)
 

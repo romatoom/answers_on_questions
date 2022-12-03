@@ -27,5 +27,18 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
         = f.label :body, 'Body', class: 'form-label'
         = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
 
+      div.mb-3
+        div.mb2
+          'Files:
+          - if answer.files.attached?
+            - answer.files.each do |file|
+              = link_to file.filename.to_s, url_for(file)
+              '&nbsp;
+          - else
+            'Not attached
+
+        = f.label :files, 'Add more file(s)', class: 'form-label'
+        = f.file_field :files, id: :answer_files, class: 'form-control form-control-sm', multiple: true
+
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }

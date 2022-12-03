@@ -14,7 +14,10 @@ class AnswersController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    @answer.update(answer_params) if current_user == @answer.author
+    if current_user == @answer.author
+      @answer.update(answer_params_without_files)
+      @answer.files.attach(params[:answer][:files])
+    end
   end
 
   def destroy
@@ -32,6 +35,10 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, :best, files: [])
+  end
+
+  def answer_params_without_files
+    params.require(:answer).permit(:body, :best)
   end
 
   def set_question
