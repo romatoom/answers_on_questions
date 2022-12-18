@@ -43,7 +43,12 @@ feature 'The author can edit his question', %q(
       scenario 'can add files when editing question', js: true do
         find('.edit_question_btn').click
 
-        attach_file 'Add more file(s)', ["#{Rails.root}/spec/files_for_active_storage/file-1.txt", "#{Rails.root}/spec/files_for_active_storage/file-2.txt"]
+        find("#question_files_#{question.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+          ])
+
         click_on 'Save'
 
         within("#question_#{question.id}") do
@@ -53,13 +58,51 @@ feature 'The author can edit his question', %q(
 
         find('.edit_question_btn').click
 
-        attach_file 'Add more file(s)', ["#{Rails.root}/spec/files_for_active_storage/file-3.txt", "#{Rails.root}/spec/files_for_active_storage/file-4.txt"]
+        find("#question_files_#{question.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-3.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-4.txt"
+          ])
+
         click_on 'Save'
 
         within("#question_#{question.id}") do
           expect(page).to have_link 'file-1.txt'
           expect(page).to have_link 'file-2.txt'
           expect(page).to have_link 'file-3.txt'
+          expect(page).to have_link 'file-4.txt'
+        end
+      end
+
+      scenario 'can delete files when editing question', js: true do
+        find('.edit_question_btn').click
+
+        find("#question_files_#{question.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+          ])
+
+        click_on 'Save'
+
+        find('.edit_question_btn').click
+
+        find("#edit-question-form-#{question.id} .uploaded-files .file-delete", match: :first).click
+
+        find("#question_files_#{question.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-3.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-4.txt"
+          ])
+
+        find("#edit-question-form-#{question.id} #files-area .file-delete", match: :first).click
+
+        click_on 'Save'
+
+        within("#question_#{question.id}") do
+          expect(page).to_not have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+          expect(page).to_not have_link 'file-3.txt'
           expect(page).to have_link 'file-4.txt'
         end
       end

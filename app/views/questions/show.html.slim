@@ -11,20 +11,16 @@ div.question.mb-5
 
   div
     'Files:
-    - if @question.files.attached?
-      - @question.files.each do |file|
-        = link_to file.filename.to_s, url_for(file)
-        '&nbsp;
-    - else
-      'Not attached
+    = render "shared/file_list", resource: @question, is_uploaded_files: false
 
 div.mb-5
   div.fw-bold Answers
   ul.answers.mb-3
-    - if @answers
+    - if @answers.present?
       = render @answers
     - else
-      span.no-answers No answers
+      span.no-answers
+        'No answers
 
 div
   = form_with model: [@question, @answer], local: false, class: 'create-answer-form' do |f|

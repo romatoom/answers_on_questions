@@ -3,16 +3,11 @@ li id="question_#{question.id}"
 
   div.mb-2
     'Files:
-    - if question.files.attached?
-      - question.files.each do |file|
-        = link_to file.filename.to_s, url_for(file)
-        '&nbsp;
-    - else
-      'Not attached
+    = render "shared/file_list", resource: question, is_uploaded_files: false
 
   - if question.author == current_user
     = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
-    = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { question_id: question.id }
+    = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { resource_id: question.id }
 
     = form_with model: question, method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-question-form-#{question.id}" } do |f|
       div.question-errors
@@ -25,15 +20,19 @@ li id="question_#{question.id}"
         = f.text_area :body, id: :question_body, rows: 10, class: 'form-control'
       div.mb-3
         div.mb2
-          'Files:
-          - if question.files.attached?
-            - question.files.each do |file|
-              = link_to file.filename.to_s, url_for(file)
-              '&nbsp;
-          - else
-            'Not attached
-        = f.label :files, 'Add more file(s)', class: 'form-label'
-        = f.file_field :files, id: :question_files, class: 'form-control form-control-sm', multiple: true
+          'Uploaded files:
+          = render "shared/file_list", resource: question, is_uploaded_files: true
+
+        = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
+
+        label for="question_files_#{question.id}"
+          = content_tag "a", "+ Add more files", class: "btn btn-primary text-light", role: 'button'
+
+        = f.file_field :files, id: "question_files_#{question.id}", class: 'form-control form-control-sm question_files d-none', data: { resource_id: question.id }, multiple: true
+
+        p id="files-area"
+          span id="filesList"
+            span id="files-names"
 
       = f.submit 'Save', class: 'btn btn-success me-2'
-      = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-question', data: { question_id: question.id }
+      = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-question', data: { resource_id: question.id }
