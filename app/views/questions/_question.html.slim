@@ -26,7 +26,7 @@ li id="question_#{question.id}"
         = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
 
         label for="question_files_#{question.id}"
-          = content_tag "a", "+ Add more files", class: "btn btn-primary text-light", role: 'button'
+          = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
         = f.file_field :files, id: "question_files_#{question.id}", class: 'form-control form-control-sm question_files d-none', data: { resource_id: question.id }, multiple: true
 

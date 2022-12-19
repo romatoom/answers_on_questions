@@ -3,5 +3,6 @@
   $('#answer_<%= @answer.id %> #answer_body').addClass('error');
 <% else %>
   $('#answer_<%= @answer.id %>').replaceWith('<%= j render @answer %>');
+  setHandlerOnChangeFiles(null, 'answer', <%= @answer.id %>)
   addAlert('Answer has been edited successfully.', 'success');
 <% end %>

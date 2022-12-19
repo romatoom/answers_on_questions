@@ -23,7 +23,7 @@ div.mb-5
         'No answers
 
 div
-  = form_with model: [@question, @answer], local: false, class: 'create-answer-form' do |f|
+  = form_with model: [@question, @answer], html: { id: "new-answer-form" }, local: false, class: 'create-answer-form' do |f|
     div.answer-errors
       = render 'shared/errors', resource: @answer
 
@@ -32,8 +32,14 @@ div
       = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control create-answer-area'
 
     div.mb-2
-      = f.label :files, 'File(s)', class: 'form-label'
-      = f.file_field :files, id: :answer_files, class: 'form-control form-control-sm', multiple: true
+      label for="answer_files"
+        = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
+
+      = f.file_field :files, id: "answer_files", class: 'form-control form-control-sm answer_files d-none', multiple: true
+
+      p id="files-area"
+          span id="filesList"
+            span id="files-names"
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

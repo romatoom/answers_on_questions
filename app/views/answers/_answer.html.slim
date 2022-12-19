@@ -5,12 +5,7 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
 
   div.mb-3
     'Files:
-    - if answer.files.attached?
-      - answer.files.each do |file|
-        = link_to file.filename.to_s, url_for(file)
-        '&nbsp;
-    - else
-      'Not attached
+    = render "shared/file_list", resource: answer, is_uploaded_files: false
 
   - if answer.author == current_user
     = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
@@ -29,16 +24,19 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
 
       div.mb-3
         div.mb2
-          'Files:
-          - if answer.files.attached?
-            - answer.files.each do |file|
-              = link_to file.filename.to_s, url_for(file)
-              '&nbsp;
-          - else
-            'Not attached
+          'Uploaded files:
+          = render "shared/file_list", resource: answer, is_uploaded_files: true
 
-        = f.label :files, 'Add more file(s)', class: 'form-label'
-        = f.file_field :files, id: :answer_files, class: 'form-control form-control-sm', multiple: true
+        = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
+
+        label for="answer_files_#{answer.id}"
+          = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
+
+        = f.file_field :files, id: "answer_files_#{answer.id}", class: 'form-control form-control-sm answer_files d-none', data: { resource_id: answer.id }, multiple: true
+
+        p id="files-area"
+          span id="filesList"
+            span id="files-names"
 
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }

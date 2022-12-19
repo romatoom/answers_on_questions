@@ -14,7 +14,7 @@ h1 Create question
 
   div.mb-5
     label for="question_files"
-      = content_tag "a", "+ Add more files", class: "btn btn-primary text-light", role: 'button'
+      = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
     = f.file_field :files, id: "question_files", class: 'form-control form-control-sm question_files d-none', multiple: true
 

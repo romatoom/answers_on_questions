@@ -1,10 +1,11 @@
-$(document).on('turbolinks:load', setHandlerOnChangeQuestionFiles);
+$(document).on('turbolinks:load', () => setHandlerOnChangeFiles(null, 'question'));
+$(document).on('turbolinks:load', () => setHandlerOnChangeFiles(null, 'answer'));
 
-function setHandlerOnChangeQuestionFiles (e, resId = null) {
+function setHandlerOnChangeFiles (e, resType, resId = null) {
   if (resId !== null) {
-    $("#question_files_" + resId).on('change', onChangeResource);
+    $("#" + resType + "_files_" + resId).on('change', onChangeResource);
   } else {
-    $(".question_files").on('change', onChangeResource);
+    $("." + resType + "_files").on('change', onChangeResource);
   }
 
   function onChangeResource(e) {
@@ -18,9 +19,9 @@ function setHandlerOnChangeQuestionFiles (e, resId = null) {
       fileBloc.append("<span class='file-delete' data-resource-id='" + resourceId + "'><span>+</span></span>").append(fileName);
 
       if (resourceId > 0) {
-        $("#edit-question-form-" + resourceId + " #filesList > #files-names").append(fileBloc);
+        $("#edit-" + resType + "-form-" + resourceId + " #filesList > #files-names").append(fileBloc);
       } else {
-        $("#new-question-form #filesList > #files-names").append(fileBloc);
+        $("#new-" + resType + "-form #filesList > #files-names").append(fileBloc);
       }
     };
 
@@ -31,6 +32,7 @@ function setHandlerOnChangeQuestionFiles (e, resId = null) {
     this.files = dt.files;
 
     $('span.file-delete').on('click', function() {
+      console.log('dt.files:', dt.files);
       let name = $(this).next('span.name').text();
 
       for (let i = 0; i < dt.items.length; i++) {
@@ -43,7 +45,9 @@ function setHandlerOnChangeQuestionFiles (e, resId = null) {
       const resourceId = $(this).data('resourceId') || 0;
 
       if (resourceId > 0) {
-        document.getElementById('question_files_' + resourceId).files = dt.files;
+        document.getElementById(resType + '_files_' + resourceId).files = dt.files;
+      } else {
+        document.getElementById(resType + '_files').files = dt.files;
       }
 
       $(this).parent().remove();
@@ -51,5 +55,5 @@ function setHandlerOnChangeQuestionFiles (e, resId = null) {
   }
 };
 
-window.setHandlerOnChangeQuestionFiles = setHandlerOnChangeQuestionFiles;
+window.setHandlerOnChangeFiles = setHandlerOnChangeFiles;
 

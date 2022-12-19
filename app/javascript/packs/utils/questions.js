@@ -9,6 +9,7 @@ $(document).on('turbolinks:load', function() {
   $('.questions').on('click', '.cancel-edit-question', function(e) {
     e.preventDefault();
     const resourceId = $(this).data('resourceId');
+
     $('#edit-question-form-' + resourceId).trigger("reset");
     $('#edit-question-form-' + resourceId + ' #filesList > #files-names').empty();
     $('#edit-question-form-' + resourceId + ' .file-list-for-delete').val('');

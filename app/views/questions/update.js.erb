@@ -9,7 +9,7 @@
   <% end %>
 <% else %>
   $('#question_<%= @question.id %>').replaceWith('<%= j render @question %>');
-  setHandlerOnChangeQuestionFiles(null, <%= @question.id %>)
+  setHandlerOnChangeFiles(null, 'question', <%= @question.id %>)
 
   addAlert('Question has been edited successfully.', 'success');
 <% end %>

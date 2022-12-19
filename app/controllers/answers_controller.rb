@@ -17,6 +17,8 @@ class AnswersController < ApplicationController
     if current_user == @answer.author
       @answer.update(answer_params_without_files)
       @answer.files.attach(params[:answer][:files]) if params[:answer][:files].present?
+      delete_file_attachments(params[:answer][:file_list_for_delete])
+      @answer.reload
     end
   end
 
@@ -47,5 +49,13 @@ class AnswersController < ApplicationController
 
   def set_answer
     @answer = Answer.with_attached_files.find(params[:id])
+  end
+
+  def delete_file_attachments(str_with_files_ids)
+    return if str_with_files_ids.blank?
+    files_ids = str_with_files_ids.split(',').compact
+    files_ids.each do |file_id|
+      @answer.files.find(file_id).purge
+    end
   end
 end
