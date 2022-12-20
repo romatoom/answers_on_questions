@@ -35,7 +35,7 @@ div
       label for="answer_files"
         = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
-      = f.file_field :files, id: "answer_files", class: 'form-control form-control-sm answer_files d-none', multiple: true
+      = f.file_field :files, id: "answer_files", class: 'form-control form-control-sm answer_files d-none', multiple: true, direct_upload: true
 
       p id="files-area"
           span id="filesList"

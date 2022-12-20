@@ -6,6 +6,23 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+development:
+  service: S3
+  access_key_id: "YCAJEGTtf3lyHkXzDtw15pH6B"
+  secret_access_key: "YCP-SdARt6YLlP_BjVSCdyVLb7UbcUwCZmBhxsfF"
+  bucket: "answers-on-questions-attachments-dev"
+  endpoint: "https://storage.yandexcloud.net"
+  region: "ru-central1"
+  force_path_style: true
+
+production:
+  service: S3
+  access_key_id: "YCAJEGTtf3lyHkXzDtw15pH6B"
+  secret_access_key: "YCP-SdARt6YLlP_BjVSCdyVLb7UbcUwCZmBhxsfF"
+  bucket: "answers-on-questions-attachments"
+  endpoint: "https://storage.yandexcloud.net"
+  region: "ru-central1"
+  force_path_style: true
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
