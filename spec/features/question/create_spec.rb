@@ -30,6 +30,20 @@ feature 'User can create question', %q(
       end
     end
 
+    scenario 'asks a question with attached files' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Text text text'
+      find('#question_files')
+        .attach_file([
+          "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+          "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+        ])
+      click_on 'Ask'
+
+      expect(page).to have_link 'file-1.txt'
+      expect(page).to have_link 'file-2.txt'
+    end
+
     scenario 'asks a question with errors' do
       click_on 'Ask'
 

@@ -39,6 +39,69 @@ feature 'The author can edit his answer', %q(
         end
       end
 
+      scenario 'can add files when editing answer', js: true do
+        within("#answer_#{answer.id}") do
+          find('.edit_answer_btn').click
+
+          find("#answer_files_#{answer.id}", visible: false)
+            .attach_file([
+              "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+              "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+            ])
+          click_on 'Save'
+
+          expect(page).to have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+
+          find('.edit_answer_btn').click
+
+          find("#answer_files_#{answer.id}", visible: false)
+            .attach_file([
+              "#{Rails.root}/spec/files_for_active_storage/file-3.txt",
+              "#{Rails.root}/spec/files_for_active_storage/file-4.txt"
+            ])
+          click_on 'Save'
+
+          expect(page).to have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+          expect(page).to have_link 'file-3.txt'
+          expect(page).to have_link 'file-4.txt'
+        end
+      end
+
+      scenario 'can delete files when editing answer', js: true do
+        find('.edit_answer_btn').click
+
+        find("#answer_files_#{answer.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+          ])
+
+        click_on 'Save'
+
+        find('.edit_answer_btn').click
+
+        find("#edit-answer-form-#{answer.id} .uploaded-files .file-delete", match: :first).click
+
+        find("#answer_files_#{answer.id}", visible: false)
+          .attach_file([
+            "#{Rails.root}/spec/files_for_active_storage/file-3.txt",
+            "#{Rails.root}/spec/files_for_active_storage/file-4.txt"
+          ])
+
+        find("#edit-answer-form-#{answer.id} #files-area .file-delete", match: :first).click
+
+        click_on 'Save'
+
+        within("#answer_#{answer.id}") do
+          expect(page).to_not have_link 'file-1.txt'
+          expect(page).to have_link 'file-2.txt'
+          expect(page).to_not have_link 'file-3.txt'
+          expect(page).to have_link 'file-4.txt'
+        end
+      end
+
       scenario 'try edit answer with errors', js: true do
         expect(page).to have_selector('.edit_form', visible: false)
 

@@ -2,6 +2,11 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
   - if answer.best
     div.text-success.mb-2 Best answer
   = answer.body.html_safe
+
+  div.mb-3
+    'Files:
+    = render "shared/file_list", resource: answer, is_uploaded_files: false
+
   - if answer.author == current_user
     = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
@@ -16,6 +21,22 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
       div.mb-2
         = f.label :body, 'Body', class: 'form-label'
         = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
+
+      div.mb-3
+        div.mb2
+          'Uploaded files:
+          = render "shared/file_list", resource: answer, is_uploaded_files: true
+
+        = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
+
+        label for="answer_files_#{answer.id}"
+          = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
+
+        = f.file_field :files, id: "answer_files_#{answer.id}", class: 'form-control form-control-sm answer_files d-none', data: { resource_id: answer.id }, multiple: true, direct_upload: true
+
+        p id="files-area"
+          span id="filesList"
+            span id="files-names"
 
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }

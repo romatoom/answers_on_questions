@@ -1,0 +1,20 @@
+- if resource.files.attached?
+  - if is_uploaded_files
+    - resource.files.each do |file|
+      span.file-block.uploaded-files
+        = content_tag "a", class: "file-delete add-file-to-list-for-delete", target: "_blank", data: { file_id: file.id, resource_id: resource.id }
+          span
+            '+
+        span.name
+          = file.filename.to_s
+  - else
+    p id="files-area"
+      span id="filesList"
+        span id="files-names"
+          - resource.files.each do |file|
+            span.file-block
+              = content_tag "a", href: url_for(file), target: "_blank", class: "name"
+                = file.filename.to_s
+- else
+  'Not attached
+

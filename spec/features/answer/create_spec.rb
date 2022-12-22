@@ -27,6 +27,21 @@ feature 'User can write an answer', %q(
       end
     end
 
+    scenario 'can write an answer with attached files', js: true do
+      fill_in 'You can answer the question here', with: 'Text text text'
+      find('#answer_files', visible: false)
+        .attach_file([
+          "#{Rails.root}/spec/files_for_active_storage/file-1.txt",
+          "#{Rails.root}/spec/files_for_active_storage/file-2.txt"
+        ])
+      click_on 'Answer'
+
+      within '.answers' do
+        expect(page).to have_link 'file-1.txt'
+        expect(page).to have_link 'file-2.txt'
+      end
+    end
+
     scenario 'create answer with error', js: true do
       click_on 'Answer'
 

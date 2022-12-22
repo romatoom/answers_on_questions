@@ -14,7 +14,12 @@ class AnswersController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    @answer.update(answer_params) if current_user == @answer.author
+    if current_user == @answer.author
+      @answer.update(answer_params_without_files)
+      @answer.files.attach(params[:answer][:files]) if params[:answer][:files].present?
+      delete_file_attachments(params[:answer][:file_list_for_delete])
+      @answer.reload
+    end
   end
 
   def destroy
@@ -31,14 +36,26 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
+    params.require(:answer).permit(:body, :best, files: [])
+  end
+
+  def answer_params_without_files
     params.require(:answer).permit(:body, :best)
   end
 
   def set_question
-    @question = Question.find(params[:question_id])
+    @question = Question.with_attached_files.find(params[:question_id])
   end
 
   def set_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.with_attached_files.find(params[:id])
+  end
+
+  def delete_file_attachments(str_with_files_ids)
+    return if str_with_files_ids.blank?
+    files_ids = str_with_files_ids.split(',').compact
+    files_ids.each do |file_id|
+      @answer.files.find(file_id).purge
+    end
   end
 end
