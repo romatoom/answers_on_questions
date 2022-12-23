@@ -8,10 +8,12 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.links.new
   end
 
   def show
     @answer = Answer.new
+    @answer.links.new
     @answers = @question.answers.sort_by_best
   end
 
@@ -46,11 +48,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, links_attributes: [:id, :name, :url, :_destroy], files: [])
   end
 
   def question_params_without_files
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, links_attributes: [:id, :name, :url, :_destroy])
   end
 
   def set_question

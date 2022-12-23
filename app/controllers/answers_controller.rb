@@ -36,11 +36,11 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :best, files: [])
+    params.require(:answer).permit(:body, :best, links_attributes: [:id, :name, :url, :_destroy], files: [])
   end
 
   def answer_params_without_files
-    params.require(:answer).permit(:body, :best)
+    params.require(:answer).permit(:body, :best, links_attributes: [:id, :name, :url, :_destroy])
   end
 
   def set_question

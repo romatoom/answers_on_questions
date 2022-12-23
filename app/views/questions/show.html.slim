@@ -9,12 +9,16 @@ div.question.mb-5
     div.fw-bold Body
     = @question.body.html_safe
 
-  div
+  div.mb-3
     'Files:
     = render "shared/file_list", resource: @question, is_uploaded_files: false
 
+  - if @question.links.present?
+    div.mb-3
+      = render "shared/links", links: @question.links
+
 div.mb-5
-  div.fw-bold Answers
+  div.mb-2.fw-bold Answers
   ul.answers.mb-3
     - if @answers.present?
       = render @answers
@@ -27,11 +31,11 @@ div
     div.answer-errors
       = render 'shared/errors', resource: @answer
 
-    div.answer-new.mb-2
+    div.answer-new.mb-3
       = f.label :body, 'You can answer the question here', class: 'form-label'
       = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control create-answer-area'
 
-    div.mb-2
+    div.mb-3
       label for="answer_files"
         = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
@@ -40,6 +44,12 @@ div
       p id="files-area"
           span id="filesList"
             span id="files-names"
+
+    #links.mb-5
+      = f.fields_for :links do |link|
+        = render 'link_fields', f: link
+      .links
+        = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'
