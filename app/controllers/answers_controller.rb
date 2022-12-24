@@ -7,7 +7,6 @@ class AnswersController < ApplicationController
 
   def create
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
-
     @answer = @question.answers.create(answer_params.merge(author: current_user))
   end
 

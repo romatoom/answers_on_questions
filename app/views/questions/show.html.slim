@@ -45,11 +45,13 @@ div
           span id="filesList"
             span id="files-names"
 
-    #links.mb-5
-      = f.fields_for :links do |link|
-        = render 'link_fields', f: link
-      .links
-        = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
+    div.mb-2
+      div.mb-1 Links
+      #links.mb-5
+        = f.fields_for :links do |link|
+          = render 'link_fields', f: link
+        .links
+          = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
 
     = f.submit 'Answer', class: 'btn btn-primary me-2'
     = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'
