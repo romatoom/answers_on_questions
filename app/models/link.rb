@@ -3,4 +3,10 @@ class Link < ApplicationRecord
 
   validates :name, :url, presence: true
   validates :url, url: true
+
+  REGEXP_GIST = /^https:\/\/gist\.github\.com\/(?<nickname>.+)\/(?<gist_id>[a-f\d]+)$/
+
+  def match_gist
+    url.match(REGEXP_GIST)
+  end
 end
