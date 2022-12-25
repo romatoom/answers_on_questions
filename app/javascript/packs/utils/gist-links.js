@@ -1,8 +1,9 @@
 const GistClient = require("gist-client");
 const gistClient = new GistClient();
+const publicToken = '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';
 
-// Token for public
-gistClient.setToken('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');
+// Safe token for public access
+gistClient.setToken(publicToken);
 
 $(document).on('turbolinks:load', function(e) {
   $(".gist-content").each(function( index ) {

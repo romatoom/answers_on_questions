@@ -1,0 +1,8 @@
+.nested-fields.row.resource-link-item.mb-2
+  .col-6.field
+    = f.label :name, 'Link name', class: 'form-label'
+    = f.text_field :name, class: 'form-control link-name'
+  .col-6.field
+    = f.label :url, 'URL', class: 'form-label'
+    = f.text_field :url, class: 'form-control link-url'
+  = link_to_remove_association "×", f, class: 'btn btn-danger remove-resource-link-item'

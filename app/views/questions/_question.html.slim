@@ -5,6 +5,11 @@ li id="question_#{question.id}"
     'Files:
     = render "shared/file_list", resource: question, is_uploaded_files: false
 
+  div.mb-3
+    - if question.links.present?
+      div.mb-3
+        = render "shared/links", links: question.links, with_matching: false
+
   - if question.author == current_user
     = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
     = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { resource_id: question.id }
@@ -36,6 +41,14 @@ li id="question_#{question.id}"
         p id="files-area"
           span id="filesList"
             span id="files-names"
+
+      div.mb-2
+        div.mb-1 Links
+        #links.mb-5
+          = f.fields_for :links do |link|
+            = render 'link_fields', f: link
+          .links
+            = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
 
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-question', data: { resource_id: question.id }

@@ -15,7 +15,7 @@ div.question.mb-5
 
   - if @question.links.present?
     div.mb-3
-      = render "shared/links", links: @question.links
+      = render "shared/links", links: @question.links, with_matching: true
 
 div.mb-5
   div.mb-2.fw-bold Answers
