@@ -1,0 +1,5 @@
+.reward-card
+  = image_tag url_for(reward.image), class: "reward-card-image"
+  .reward-card-body
+    h5 =reward.title
+    p For the best answer to the question "#{reward.question.title}"
