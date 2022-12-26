@@ -26,9 +26,13 @@ class AnswersController < ApplicationController
   end
 
   def mark_answer_as_best
+    return if current_user != @question.author
+
     @top_answer = @question.answers.sort_by_best.first
     @best_answer = @top_answer&.best ? @top_answer : nil
-    @answer.mark_as_best if current_user == @question.author
+
+    @answer.mark_as_best
+
     @best_answer.reload if @best_answer
   end
 

@@ -10,12 +10,19 @@ div.question.mb-5
     = @question.body.html_safe
 
   div.mb-3
-    'Files:
+    div.fw-bold Files:
     = render "shared/file_list", resource: @question, is_uploaded_files: false
 
   - if @question.links.present?
     div.mb-3
       = render "shared/links", links: @question.links, with_matching: true
+
+  - if @question.reward.present?
+    div.reward.mb-3
+      div.fw-bold.mb-1
+        'Best answer reward
+      div= @question.reward.title
+      = image_tag url_for(@question.reward.image), class: "best-answer-reward"
 
 div.mb-5
   div.mb-2.fw-bold Answers

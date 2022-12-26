@@ -30,5 +30,16 @@ h1 Create question
       .links
         = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
 
+  div.mb-2
+    div.mb-1 Reward
+    = f.fields_for :reward do |r|
+      .row.create-reward
+        .col-6
+          = r.label :title, 'Label', class: 'form-label'
+          = r.text_field :title, class: 'form-control'
+        .col-6
+          = r.label :image, 'Image', class: 'form-label'
+          = r.file_field :image, class: 'form-control form-control-sm', direct_upload: true
+
   = f.submit 'Ask', class: 'btn btn-primary me-2'
   = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

@@ -9,6 +9,7 @@ class QuestionsController < ApplicationController
   def new
     @question = Question.new
     @question.links.new
+    @question.reward = Reward.new
   end
 
   def show
@@ -48,7 +49,12 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, links_attributes: [:id, :name, :url, :_destroy], files: [])
+    params.require(:question).permit(
+      :title, :body,
+      links_attributes: [:id, :name, :url, :_destroy],
+      reward_attributes: [:id, :title, :image, :_destroy],
+      files: []
+    )
   end
 
   def question_params_without_files
