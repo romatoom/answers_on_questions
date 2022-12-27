@@ -26,7 +26,7 @@ RSpec.describe Link, type: :model do
         expect(@link.valid?).to be false
       end
 
-      it 'with url is http://googlecom' do
+      it 'with url is https//google.com' do
         @link = question.links.new(name: 'Link', url: "https//google.com")
         expect(@link.valid?).to be false
       end
