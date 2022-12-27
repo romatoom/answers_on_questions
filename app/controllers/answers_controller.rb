@@ -13,7 +13,7 @@ class AnswersController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    if current_user == @answer.author
+    if current_user&.author_of?(@answer)
       @answer.update(answer_params_without_files)
       @answer.files.attach(params[:answer][:files]) if params[:answer][:files].present?
       delete_file_attachments(params[:answer][:file_list_for_delete])
@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy if current_user == @answer.author
+    @answer.destroy if current_user&.author_of?(@answer)
   end
 
   def mark_answer_as_best
