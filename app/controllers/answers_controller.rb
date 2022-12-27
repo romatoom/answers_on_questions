@@ -26,7 +26,7 @@ class AnswersController < ApplicationController
   end
 
   def mark_answer_as_best
-    return if !current_user.author_of?(@question)
+    return head :forbidden if !current_user.author_of?(@question)
 
     @top_answer = @question.answers.sort_by_best.first
     @best_answer = @top_answer&.best ? @top_answer : nil
