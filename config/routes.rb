@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resources :rewards, only: :index
+
   resources :questions, only: %i[new create update show index destroy] do
     delete :delete_file_attachment, on: :member
 

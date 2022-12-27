@@ -216,19 +216,29 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with not author of question' do
       before { login(not_author) }
+      before { mark_best_answer }
+
+      it "don't mark any as best answer" do
+        expect(answer1.reload.best).to be false
+        expect(answer2.reload.best).to be false
+      end
+
+      it "responds with bad request status" do
+        expect(response.status).to be 403
+      end
+    end
+
+    context 'with unauthenticated user' do
+      before { mark_best_answer }
 
       it "don't mark any as best answer" do
         mark_best_answer
         expect(answer1.reload.best).to be false
         expect(answer2.reload.best).to be false
       end
-    end
 
-    context 'with unauthenticated user' do
-      it "don't mark any as best answer" do
-        mark_best_answer
-        expect(answer1.reload.best).to be false
-        expect(answer2.reload.best).to be false
+      it "responds with unauthorized status" do
+        expect(response.status).to be 401
       end
     end
   end

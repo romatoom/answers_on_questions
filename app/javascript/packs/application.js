@@ -7,6 +7,8 @@ import 'jquery'
 window.jQuery = $;
 window.$ = $;
 
+import '@nathanvda/cocoon'
+
 import 'bootstrap'
 
 import Rails from "@rails/ujs"

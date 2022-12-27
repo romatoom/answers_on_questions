@@ -1,0 +1,16 @@
+div.mb-2 Links:
+ul.links
+  - if with_matching
+    - links.each do |link|
+      -if link.match_gist
+        li.gist-link
+          div.gist-author
+            'Gist by #{link.match_gist[:nickname]}
+          = link_to link.name, link.url, target: "_blank", class: "resource-link"
+          div.gist-content-wrap
+            div.gist-content data-gist-id="#{link.match_gist[:gist_id]}"
+      -else
+        li= link_to link.name, link.url, target: "_blank", class: "resource-link"
+  - else
+    - links.each do |link|
+      li= link_to link.name, link.url, target: "_blank", class: "resource-link"

@@ -1,8 +1,7 @@
 <% if @question.errors.present? %>
   $('#question_<%= @question.id %> .question-errors').html('<%= render 'shared/errors', resource: @question %>');
 
-  $('#question_<%= @question.id %> #question_title').removeClass('error');
-  $('#question_<%= @question.id %> #question_body').removeClass('error');
+  $('.form-control').removeClass('error');
 
   <% @question.errors.each do |error| %>
     $('#question_<%= @question.id %> #question_<%= error.attribute %>').addClass('error');

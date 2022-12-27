@@ -1,6 +1,9 @@
 <% if @answer.errors.present? %>
   $('#answer_<%= @answer.id %> .answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-  $('#answer_<%= @answer.id %> #answer_body').addClass('error');
+
+  <% @answer.errors.each do |error| %>
+    $('#answer_<%= @answer.id %> #answer_<%= error.attribute %>').addClass('error');
+  <% end %>
 <% else %>
   $('#answer_<%= @answer.id %>').replaceWith('<%= j render @answer %>');
   setHandlerOnChangeFiles(null, 'answer', <%= @answer.id %>)

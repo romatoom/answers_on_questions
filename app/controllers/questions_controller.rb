@@ -8,10 +8,13 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.links.new
+    @question.reward = Reward.new
   end
 
   def show
     @answer = Answer.new
+    @answer.links.new
     @answers = @question.answers.sort_by_best
   end
 
@@ -28,7 +31,7 @@ class QuestionsController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    if current_user == @question.author
+    if current_user&.author_of?(@question)
       @question.update(question_params_without_files)
       @question.files.attach(params[:question][:files]) if params[:question][:files].present?
       delete_file_attachments(params[:question][:file_list_for_delete])
@@ -37,7 +40,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user == @question.author
+    if current_user&.author_of?(@question)
       @question.destroy
       redirect_to questions_path, success: 'Question has been removed successfully.'
     end
@@ -46,11 +49,16 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(
+      :title, :body,
+      links_attributes: [:id, :name, :url, :_destroy],
+      reward_attributes: [:id, :title, :image, :_destroy],
+      files: []
+    )
   end
 
   def question_params_without_files
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, links_attributes: [:id, :name, :url, :_destroy])
   end
 
   def set_question

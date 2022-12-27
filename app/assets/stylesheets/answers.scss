@@ -1,9 +1,13 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/_variables.scss";
 
-.answers>.best {
+.answers>li {
   padding: 20px;
-  background-color: $teal-100;
-  border: 1px solid $teal-200;
   border-radius: 6px;
+  background-color: $gray-100;
+  border: 1px solid $gray-200;
+}
+
+.answers>.best {
+  border: 1px solid $teal-200;
 }

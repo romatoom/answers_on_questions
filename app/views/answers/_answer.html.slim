@@ -7,26 +7,31 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
     'Files:
     = render "shared/file_list", resource: answer, is_uploaded_files: false
 
-  - if answer.author == current_user
+  div.mb-3
+    - if answer.links.present?
+      div.mb-3
+        = render "shared/links", links: answer.links, with_matching: true
+
+  - if current_user&.author_of?(answer)
     = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
 
-  - if !answer.best && answer.question.author == current_user
+  - if !answer.best && current_user&.author_of?(answer.question)
     = button_to 'Mark at best', mark_answer_as_best_question_answer_path(@question, answer), remote: true, class: 'btn btn-success mark_best_answer'
 
-  - if answer.author == current_user
+  - if current_user&.author_of?(answer)
     = form_with model: [@question, answer], method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
       div.answer-errors
         = render 'shared/errors', resource: answer
-      div.mb-2
+      div.mb-3
         = f.label :body, 'Body', class: 'form-label'
         = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
 
       div.mb-3
-        div.mb2
-          'Uploaded files:
-          = render "shared/file_list", resource: answer, is_uploaded_files: true
+        'Uploaded files:
+        = render "shared/file_list", resource: answer, is_uploaded_files: true
 
+      div.mb-3
         = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
 
         label for="answer_files_#{answer.id}"
@@ -37,6 +42,14 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
         p id="files-area"
           span id="filesList"
             span id="files-names"
+
+        div.mb-2
+          div.mb-1 Links
+          #links.mb-5
+            = f.fields_for :links do |link|
+              = render 'link_fields', f: link
+            .links
+              = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
 
       = f.submit 'Save', class: 'btn btn-success me-2'
       = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }

@@ -44,6 +44,22 @@ feature 'User can create question', %q(
       expect(page).to have_link 'file-2.txt'
     end
 
+    scenario 'asks a question with attach reward' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Text text text'
+
+      within ".create-reward" do
+        fill_in 'Label', with: 'Test reward'
+        find('#question_reward_attributes_image')
+          .attach_file("#{Rails.root}/spec/files_for_active_storage/reward.png")
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'Test reward'
+      expect(page).to have_css("img[src*='reward.png']")
+    end
+
     scenario 'asks a question with errors' do
       click_on 'Ask'
 

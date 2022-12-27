@@ -12,7 +12,7 @@ h1 Create question
     = f.label :body, 'Body', class: 'form-label'
     = f.text_area :body, id: :question_body, rows: 10, class: 'form-control'
 
-  div.mb-5
+  div.mb-3
     label for="question_files"
       = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
@@ -21,6 +21,25 @@ h1 Create question
     p id="files-area"
       span id="filesList"
         span id="files-names"
+
+  div.mb-2
+    div.mb-1 Links
+    #links.mb-5
+      = f.fields_for :links do |link|
+        = render 'link_fields', f: link
+      .links
+        = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
+
+  div.mb-2
+    div.mb-1 Reward
+    = f.fields_for :reward do |r|
+      .row.create-reward
+        .col-6
+          = r.label :title, 'Label', class: 'form-label'
+          = r.text_field :title, class: 'form-control'
+        .col-6
+          = r.label :image, 'Image', class: 'form-label'
+          = r.file_field :image, class: 'form-control form-control-sm', direct_upload: true
 
   = f.submit 'Ask', class: 'btn btn-primary me-2'
   = link_to 'Back to questions', questions_path, class: 'btn btn-outline-secondary'

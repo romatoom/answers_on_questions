@@ -1,0 +1,73 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/_variables.scss";
+
+.resource-link-item {
+  position: relative;
+  margin: 0 !important;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: $gray-100;
+  border: 1px solid $gray-200;
+  width: 100%;
+
+  & .remove-resource-link-item {
+    position: absolute;
+    display: flex;
+    vertical-align: middle;
+    justify-content: center;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    line-height: 1;
+  }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  & .resource-link {
+    padding: 3px;
+    border-radius: 3px;
+    background-color: $gray-100;
+    border: 1px solid $gray-200;
+  }
+}
+
+li.gist-link {
+  width: 100%;
+  position: relative;
+  border-radius: 3px;
+  padding: 10px;
+  border: 1px solid $gray-500;
+
+  & .gist-author {
+    line-height: 1;
+    font-size: 10px;
+    width: fit-content;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: $blue-500;
+    color: $white;
+  }
+
+  & .gist-content-wrap {
+    overflow-x: auto;
+
+    & .gist-content {
+      font-family: monospace;
+      font-size: 13px;
+      margin-top: 10px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      width: max-content;
+    }
+  }
+
+}

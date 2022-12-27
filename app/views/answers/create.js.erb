@@ -1,6 +1,11 @@
 <% if @answer.errors.present? %>
   $('.create-answer-form .answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-  $('.create-answer-area').addClass('error');
+
+  $('.form-control').removeClass('error');
+
+  <% @answer.errors.each do |error| %>
+    $('#new-answer-form #answer_<%= error.attribute %>').addClass('error');
+  <% end %>
 <% end%>
 
 <% if @answer.persisted? %>

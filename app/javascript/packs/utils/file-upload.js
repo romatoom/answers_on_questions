@@ -13,6 +13,12 @@ function setHandlerOnChangeFiles (e, resType, resId = null) {
 
     const dt = new DataTransfer();
 
+    if (resourceId > 0) {
+      $("#edit-" + resType + "-form-" + resourceId + " #filesList > #files-names").html('');
+    } else {
+      $("#new-" + resType + "-form #filesList > #files-names").html('');
+    }
+
     for (let i = 0; i < this.files.length; i++) {
       let fileBloc = $('<span/>', { class: 'file-block' });
       let fileName = $('<span/>', { class: 'name', text: this.files.item(i).name });
@@ -32,7 +38,6 @@ function setHandlerOnChangeFiles (e, resType, resId = null) {
     this.files = dt.files;
 
     $('span.file-delete').on('click', function() {
-      console.log('dt.files:', dt.files);
       let name = $(this).next('span.name').text();
 
       for (let i = 0; i < dt.items.length; i++) {
