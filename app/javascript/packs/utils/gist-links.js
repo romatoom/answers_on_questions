@@ -1,11 +1,11 @@
 const GistClient = require("gist-client");
 const gistClient = new GistClient();
-const publicToken = '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';
-
+const publicToken = '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';
 // Safe token for public access
-gistClient.setToken(publicToken);
 
 $(document).on('turbolinks:load', function(e) {
+  gistClient.setToken(publicToken);
+
   $(".gist-content").each(function( index ) {
     const gistId = $(this).data("gistId")
 
@@ -17,4 +17,6 @@ $(document).on('turbolinks:load', function(e) {
       console.log(err)
     })
   });
+
+  gistClient.unsetToken()
 });
