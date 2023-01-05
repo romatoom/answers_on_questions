@@ -1,6 +1,23 @@
 li id="answer_#{answer.id}" class=('best' if answer.best)
   - if answer.best
-    div.text-success.mb-2 Best answer
+    div.text-success.mb-3 Best answer
+
+  - if current_user.present?
+    div.mb-3
+      = link_to like_answer_path(answer),
+        method: :patch,
+        class: 'btn btn-outline-success like me-2',
+        remote: true,
+        data: { type: 'json' } do
+          i.bi.bi-hand-thumbs-up
+
+      = link_to dislike_answer_path(answer),
+        method: :patch,
+        class: 'btn btn-outline-danger dislike',
+        remote: true,
+        data: { type: 'json' } do
+          i.bi.bi-hand-thumbs-down
+
   = answer.body.html_safe
 
   div.mb-3
@@ -13,14 +30,14 @@ li id="answer_#{answer.id}" class=('best' if answer.best)
         = render "shared/links", links: answer.links, with_matching: true
 
   - if current_user&.author_of?(answer)
-    = button_to 'Remove', question_answer_path(@question, answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
+    = button_to 'Remove', answer_path(answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
 
   - if !answer.best && current_user&.author_of?(answer.question)
-    = button_to 'Mark at best', mark_answer_as_best_question_answer_path(@question, answer), remote: true, class: 'btn btn-success mark_best_answer'
+    = button_to 'Mark at best', mark_answer_as_best_answer_path(answer), remote: true, class: 'btn btn-success mark_best_answer'
 
   - if current_user&.author_of?(answer)
-    = form_with model: [@question, answer], method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
+    = form_with model: answer, method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
       div.answer-errors
         = render 'shared/errors', resource: answer
       div.mb-3

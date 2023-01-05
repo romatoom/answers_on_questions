@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: %i[new create show update]
-  before_action :set_question
+  before_action :set_question, only: %i[create]
   before_action :set_answer, only: %i[show update destroy mark_answer_as_best]
 
   def show; end
@@ -26,9 +28,9 @@ class AnswersController < ApplicationController
   end
 
   def mark_answer_as_best
-    return head :forbidden if !current_user.author_of?(@question)
+    return head :forbidden if !current_user.author_of?(@answer.question)
 
-    @top_answer = @question.answers.sort_by_best.first
+    @top_answer = @answer.question.answers.sort_by_best.first
     @best_answer = @top_answer&.best ? @top_answer : nil
 
     @answer.mark_as_best

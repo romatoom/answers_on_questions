@@ -220,4 +220,6 @@ RSpec.describe QuestionsController, type: :controller do
       expect { delete_question }.to_not change(Question, :count)
     end
   end
+
+  it_behaves_like 'voted'
 end

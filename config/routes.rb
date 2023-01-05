@@ -1,14 +1,21 @@
 Rails.application.routes.draw do
   root to: 'questions#index'
 
+  concern :voteable do
+    member do
+      patch :like
+      patch :dislike
+    end
+  end
+
   devise_for :users
 
   resources :rewards, only: :index
 
-  resources :questions, only: %i[new create update show index destroy] do
+  resources :questions, only: %i[new create update show index destroy], concerns: [:voteable], shallow: true do
     delete :delete_file_attachment, on: :member
 
-    resources :answers, only: %i[create update show destroy] do
+    resources :answers, only: %i[create update show destroy], concerns: [:voteable] do
       post :mark_answer_as_best, on: :member
     end
   end

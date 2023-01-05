@@ -1,6 +1,6 @@
 nav.navbar.header.bg-light
   div.container
-    - if current_user
+    - if current_user.present?
       div
         = link_to "Sign out", destroy_user_session_path, method: "delete", id: 'sign_out', class: 'btn btn-outline-primary me-2'
         = link_to "Your rewards", rewards_path, class: 'btn btn-outline-success'
