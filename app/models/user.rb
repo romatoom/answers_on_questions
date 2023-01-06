@@ -12,4 +12,21 @@ class User < ApplicationRecord
   def author_of?(record)
     record.respond_to?(:author) && record.author == self
   end
+
+  def can_vote?(voteable)
+    !author_of?(voteable) && votes.where(voteable: voteable).empty?
+  end
+
+  def can_revote?(voteable)
+    !author_of?(voteable) && votes.where(voteable: voteable).count >= 1
+  end
+
+  def like?(voteable)
+    vote = votes.find_by(voteable: voteable)
+    vote.value > 0
+  end
+
+  def dislike?(voteable)
+    !like?(voteable)
+  end
 end

@@ -1,22 +1,8 @@
-li id="answer_#{answer.id}" class=('best' if answer.best)
+li id="answer_#{answer.id}" class='answer' class=('best' if answer.best)
   - if answer.best
     div.text-success.mb-3 Best answer
 
-  - if current_user.present?
-    div.mb-3
-      = link_to like_answer_path(answer),
-        method: :patch,
-        class: 'btn btn-outline-success like me-2',
-        remote: true,
-        data: { type: 'json' } do
-          i.bi.bi-hand-thumbs-up
-
-      = link_to dislike_answer_path(answer),
-        method: :patch,
-        class: 'btn btn-outline-danger dislike',
-        remote: true,
-        data: { type: 'json' } do
-          i.bi.bi-hand-thumbs-down
+  = render 'shared/vote', voteable: answer
 
   = answer.body.html_safe
 

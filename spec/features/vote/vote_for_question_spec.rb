@@ -7,7 +7,8 @@ feature 'User can vote for question', %q(
 ) do
 
   given!(:user) { create(:user) }
-  given!(:question) { create(:question) }
+  given!(:question_author) { create(:user) }
+  given!(:question) { create(:question, author: question_author) }
 
   context 'when the user is authenticated' do
     background do
@@ -15,29 +16,47 @@ feature 'User can vote for question', %q(
       visit question_path(question)
     end
 
-    scenario 'vote for question (like)', js: true do
+    scenario 'like question and reset vote', js: true do
       within '.question' do
+        expect(page).to_not have_content 'Revote'
+
         find('.like').click
         wait_for_ajax
+
+        expect(question.reload.votes_sum).to eq 1
+        expect(page).to have_content 'Revote'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(question.reload.votes_sum).to eq 0
+        expect(page).to_not have_content 'Revote'
       end
 
-      expect(question.reload.votes_sum).to eq 1
-
       within '.alerts' do
-        #expect(page).to have_content 'You voted for the question'
+        expect(page).to have_content 'You voted for the question'
       end
     end
 
-    scenario 'vote for question (dislike)', js: true do
+    scenario 'dislike question and reset vote', js: true do
       within '.question' do
+        expect(page).to_not have_content 'Revote'
+
         find('.dislike').click
         wait_for_ajax
+
+        expect(question.reload.votes_sum).to eq -1
+        expect(page).to have_content 'Revote'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(question.reload.votes_sum).to eq 0
+        expect(page).to_not have_content 'Revote'
       end
 
-      expect(question.reload.votes_sum).to eq -1
-
       within '.alerts' do
-        #expect(page).to have_content 'You voted down the question'
+        expect(page).to have_content 'You voted down the question'
       end
     end
   end

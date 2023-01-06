@@ -25,7 +25,7 @@ feature 'User can vote for answer', %q(
       expect(answer.reload.votes_sum).to eq 1
 
       within '.alerts' do
-        #expect(page).to have_content 'You voted for the answer'
+        expect(page).to have_content 'You voted for the answer'
       end
     end
 
@@ -38,7 +38,7 @@ feature 'User can vote for answer', %q(
       expect(answer.reload.votes_sum).to eq -1
 
       within '.alerts' do
-        #expect(page).to have_content 'You voted down the answer'
+        expect(page).to have_content 'You voted down the answer'
       end
     end
   end

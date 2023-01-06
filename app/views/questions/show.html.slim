@@ -1,21 +1,7 @@
 h1 Question
 
 div.question.mb-5
-  - if current_user.present?
-    div.mb-3
-      = link_to like_question_path(@question),
-        method: :patch,
-        class: 'btn btn-outline-success like me-2',
-        remote: true,
-        data: { type: 'json' } do
-          i.bi.bi-hand-thumbs-up
-
-      = link_to dislike_question_path(@question),
-        method: :patch,
-        class: 'btn btn-outline-danger dislike',
-        remote: true,
-        data: { type: 'json' } do
-          i.bi.bi-hand-thumbs-down
+  = render 'shared/vote', voteable: @question
 
   div.mb-3
     div.fw-bold Title

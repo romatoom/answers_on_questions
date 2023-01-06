@@ -1,21 +1,31 @@
-$(document).on('turbolinks:load', function() {
-  $('.like')
-    .on('ajax:success', function(e) {
-      const response = e.originalEvent.detail[0]
-      addAlert(response.message, 'success');
-    })
-    .on('ajax:error', function(e) {
-      const response = e.originalEvent.detail[0]
-      addAlert(response.error, 'error');
-    })
+const templateVote = require('../../templates/vote.hbs');
 
-   $('.dislike')
-    .on('ajax:success', function(e) {
+$(document).on('turbolinks:load', function() {
+  $('.vote')
+    .on('ajax:success', '.like', function(e) {
       const response = e.originalEvent.detail[0]
+      $(e.target).parent().html(templateVote(response));
       addAlert(response.message, 'success');
     })
-    .on('ajax:error', function(e) {
+    .on('ajax:error', '.like', function(e) {
       const response = e.originalEvent.detail[0]
       addAlert(response.error, 'error');
     })
+    .on('ajax:success', '.dislike', function(e) {
+      const response = e.originalEvent.detail[0]
+      $(e.target).parent().html(templateVote(response));
+      addAlert(response.message, 'success');
+    })
+    .on('ajax:error', '.dislike', function(e) {
+      const response = e.originalEvent.detail[0]
+      addAlert(response.error, 'error');
+    })
+    .on('ajax:success', '.reset-vote', function(e) {
+      const response = e.originalEvent.detail[0]
+      $(e.target).parent().html(templateVote(response));
+    })
+    .on('ajax:error', '.reset-vote', function(e) {
+      const response = e.originalEvent.detail[0]
+      addAlert(response.error, 'error');
+    });
 });

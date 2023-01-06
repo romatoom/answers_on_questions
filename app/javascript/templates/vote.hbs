@@ -1,0 +1,41 @@
+{{#if can_vote}}
+
+  <a class="btn btn-outline-success like me-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
+    href="{{btn_like.link}}">
+    <i class="bi bi-hand-thumbs-up"></i>
+  </a>
+
+  <a class="btn btn-outline-danger dislike" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
+    href="{{btn_dislike.link}}">
+    <i class="bi bi-hand-thumbs-down"></i>
+  </a>
+
+{{else}}
+
+  {{#if can_revote}}
+
+    {{#if liked}}
+      <div class="btn btn-success like me-2">
+        <i class="bi bi-hand-thumbs-up"></i>
+      </div>
+
+      <div class="btn btn-outline-danger dislike me-2">
+        <i class="bi bi-hand-thumbs-down"></i>
+      </div>
+    {{else}}
+      <div class="btn btn-outline-success like me-2">
+        <i class="bi bi-hand-thumbs-up"></i>
+      </div>
+
+      <div class="btn btn-danger dislike me-2">
+        <i class="bi bi-hand-thumbs-down"></i>
+      </div>
+    {{/if}}
+
+    <a class="btn btn-outline-primary reset-vote me-2" data-type="json" data-remote="true" rel="nofollow"
+      data-method="patch" href="{{btn_revote.link}}">
+      Revote
+    </a>
+  {{/if}}
+
+{{/if}}

@@ -6,6 +6,6 @@ module Voteable
   end
 
   def votes_sum
-    Vote.with_voteable(self).reduce(0) { |sum, vote| vote.value.present? ? sum + vote.value : sum }
+    Vote.with_voteable(self).reduce(0) { |sum, vote| vote.value.present? ? sum + vote.value : sum } || 0
   end
 end
