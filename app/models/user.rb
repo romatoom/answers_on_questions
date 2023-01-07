@@ -18,15 +18,20 @@ class User < ApplicationRecord
   end
 
   def can_revote?(voteable)
-    !author_of?(voteable) && votes.where(voteable: voteable).count >= 1
+    !author_of?(voteable) && votes.where(voteable: voteable).present?
   end
 
   def like?(voteable)
     vote = votes.find_by(voteable: voteable)
+    return if vote.nil?
+
     vote.value > 0
   end
 
   def dislike?(voteable)
-    !like?(voteable)
+    like = like?(voteable)
+    return if like.nil?
+    
+    !like
   end
 end

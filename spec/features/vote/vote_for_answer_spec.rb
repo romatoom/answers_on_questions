@@ -8,7 +8,8 @@ feature 'User can vote for answer', %q(
 
   given!(:user) { create(:user) }
   given!(:question) { create(:question) }
-  given!(:answer) { create(:answer, question: question) }
+  given!(:answer_author) { create(:user) }
+  given!(:answer) { create(:answer, question: question, author: answer_author) }
 
   context 'when the user is authenticated' do
     background do
@@ -16,29 +17,59 @@ feature 'User can vote for answer', %q(
       visit question_path(question)
     end
 
-    scenario 'vote for answer (like)', js: true do
+    scenario 'like answer and reset vote', js: true do
       within '.answers' do
+        expect(page).to_not have_content 'Revote'
+
         find('.like').click
         wait_for_ajax
       end
 
-      expect(answer.reload.votes_sum).to eq 1
-
       within '.alerts' do
         expect(page).to have_content 'You voted for the answer'
       end
+
+      within '.answers' do
+        expect(page).to have_content 'Revote'
+        expect(page).to have_content 'Votes: 1'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(page).to_not have_content 'Revote'
+        expect(page).to have_content 'Votes: 0'
+      end
+
+      within '.alerts' do
+        expect(page).to have_content 'You reset vote for the answer'
+      end
     end
 
-    scenario 'vote for answer (dislike)', js: true do
+    scenario 'dislike answer and reset vote', js: true do
       within '.answers' do
+        expect(page).to_not have_content 'Revote'
+
         find('.dislike').click
         wait_for_ajax
       end
 
-      expect(answer.reload.votes_sum).to eq -1
-
       within '.alerts' do
         expect(page).to have_content 'You voted down the answer'
+      end
+
+      within '.answers' do
+        expect(page).to have_content 'Revote'
+        expect(page).to have_content 'Votes: -1'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(page).to_not have_content 'Revote'
+        expect(page).to have_content 'Votes: 0'
+      end
+
+      within '.alerts' do
+        expect(page).to have_content 'You reset vote for the answer'
       end
     end
   end

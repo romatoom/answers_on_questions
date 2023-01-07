@@ -11,7 +11,7 @@
 
         = link_to polymorphic_path(voteable, action: :dislike),
           method: :patch,
-          class: 'btn btn-outline-danger dislike',
+          class: 'btn btn-outline-danger dislike me-2',
           remote: true,
           data: { type: 'json' } do
             i.bi.bi-hand-thumbs-down
@@ -34,6 +34,6 @@
 
         = link_to 'Revote', polymorphic_path(voteable, action: :reset_vote),
           method: :patch,
-          class: 'btn btn-outline-primary reset-vote me-2',
+          class: 'btn btn-outline-primary reset-vote',
           remote: true,
           data: { type: 'json' }

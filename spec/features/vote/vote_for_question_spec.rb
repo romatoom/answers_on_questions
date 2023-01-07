@@ -22,19 +22,25 @@ feature 'User can vote for question', %q(
 
         find('.like').click
         wait_for_ajax
-
-        expect(question.reload.votes_sum).to eq 1
-        expect(page).to have_content 'Revote'
-
-        click_on 'Revote'
-        wait_for_ajax
-
-        expect(question.reload.votes_sum).to eq 0
-        expect(page).to_not have_content 'Revote'
       end
 
       within '.alerts' do
         expect(page).to have_content 'You voted for the question'
+      end
+
+      within '.question' do
+        expect(page).to have_content 'Revote'
+        expect(page).to have_content 'Votes: 1'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(page).to_not have_content 'Revote'
+        expect(page).to have_content 'Votes: 0'
+      end
+
+      within '.alerts' do
+        expect(page).to have_content 'You reset vote for the question'
       end
     end
 
@@ -44,19 +50,25 @@ feature 'User can vote for question', %q(
 
         find('.dislike').click
         wait_for_ajax
-
-        expect(question.reload.votes_sum).to eq -1
-        expect(page).to have_content 'Revote'
-
-        click_on 'Revote'
-        wait_for_ajax
-
-        expect(question.reload.votes_sum).to eq 0
-        expect(page).to_not have_content 'Revote'
       end
 
       within '.alerts' do
         expect(page).to have_content 'You voted down the question'
+      end
+
+      within '.question' do
+        expect(page).to have_content 'Revote'
+        expect(page).to have_content 'Votes: -1'
+
+        click_on 'Revote'
+        wait_for_ajax
+
+        expect(page).to_not have_content 'Revote'
+        expect(page).to have_content 'Votes: 0'
+      end
+
+      within '.alerts' do
+        expect(page).to have_content 'You reset vote for the question'
       end
     end
   end

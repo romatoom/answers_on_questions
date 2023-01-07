@@ -2,7 +2,9 @@ li id="answer_#{answer.id}" class='answer' class=('best' if answer.best)
   - if answer.best
     div.text-success.mb-3 Best answer
 
-  = render 'shared/vote', voteable: answer
+  div.vote-block
+    = render 'shared/votes_sum', voteable: answer
+    = render 'shared/vote', voteable: answer
 
   = answer.body.html_safe
 

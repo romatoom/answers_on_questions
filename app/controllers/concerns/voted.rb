@@ -33,8 +33,10 @@ module Voted
     if @vote&.destroy
       status = :ok
       response = {
+        message: "You reset vote for the #{controller_name.singularize}",
         can_vote: true,
         can_revote: false,
+        votes_sum: @voteable.votes_sum,
         btn_like: {
           link: polymorphic_url(@voteable, action: :like)
         },
@@ -81,6 +83,7 @@ module Voted
         message: success_message,
         can_vote: false,
         can_revote: true,
+        votes_sum: @voteable.votes_sum,
         liked: liked,
         btn_revote: {
           link: polymorphic_url(@voteable, action: :reset_vote)
