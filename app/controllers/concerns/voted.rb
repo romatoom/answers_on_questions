@@ -15,13 +15,7 @@ module Voted
 
   def reset_vote
     if !current_user.can_revote?(@voteable)
-      respond_to do |format|
-        format.json do
-          render json: {
-            error: "You can not revote for #{controller_name.singularize}"
-          }
-        end
-      end
+      respond_to_json({ error: "You can not revote for #{controller_name.singularize}" }, :unsupported_entity)
       return
     end
 
@@ -37,12 +31,8 @@ module Voted
         can_vote: true,
         can_revote: false,
         votes_sum: @voteable.votes_sum,
-        btn_like: {
-          link: polymorphic_url(@voteable, action: :like)
-        },
-        btn_dislike: {
-          link: polymorphic_url(@voteable, action: :dislike)
-        }
+        btn_like_link: polymorphic_url(@voteable, action: :like),
+        btn_dislike_link: polymorphic_url(@voteable, action: :dislike)
       }
     else
       status = :unsupported_entity
@@ -51,24 +41,14 @@ module Voted
       }
     end
 
-    respond_to do |format|
-      format.json do
-        render json: response, status: status
-      end
-    end
+    respond_to_json(response, status)
   end
 
   private
 
   def vote(value)
     if !current_user.can_vote?(@voteable)
-      respond_to do |format|
-        format.json do
-          render json: {
-            error: "You can not vote for #{controller_name.singularize}"
-          }
-        end
-      end
+      respond_to_json({ error: "You can not vote for #{controller_name.singularize}" }, :unsupported_entity)
       return
     end
 
@@ -78,26 +58,32 @@ module Voted
     @voteable.votes.new(user: current_user, value: value)
 
     response = nil
+    status = nil
+
     if @voteable.save
+      status = :ok
       response = {
         message: success_message,
         can_vote: false,
         can_revote: true,
         votes_sum: @voteable.votes_sum,
         liked: liked,
-        btn_revote: {
-          link: polymorphic_url(@voteable, action: :reset_vote)
-        }
+        btn_revote_link: polymorphic_url(@voteable, action: :reset_vote)
       }
     else
+      status = :unsupported_entity
       response = {
         error: "Error saving #{controller_name.singularize}"
       }
     end
 
+    respond_to_json(response, status)
+  end
+
+  def respond_to_json(response, status)
     respond_to do |format|
       format.json do
-        render json: response
+        render json: response, status: status
       end
     end
   end

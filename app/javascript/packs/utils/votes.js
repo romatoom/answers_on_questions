@@ -4,16 +4,11 @@ const templateVotesSum = require('../../templates/votes_sum.hbs');
 $(document).on('turbolinks:load', function() {
   $('.vote-block')
     .on('ajax:success', '.like', handlerSuccess)
-    .on('ajax:error', '.like', function(e) {
-      const response = e.originalEvent.detail[0];
-      addAlert(response.error, 'error');
-    })
+    .on('ajax:error', '.like', handlerError)
     .on('ajax:success', '.dislike', handlerSuccess)
-    .on('ajax:error', '.dislike', function(e) {
-      const response = e.originalEvent.detail[0];
-      addAlert(response.error, 'error');
-    })
-    .on('ajax:success', '.reset-vote', handlerSuccess);
+    .on('ajax:error', '.dislike', handlerError)
+    .on('ajax:success', '.reset-vote', handlerSuccess)
+    .on('ajax:error', '.reset-vote', handlerError)
 });
 
 
@@ -23,3 +18,8 @@ function handlerSuccess(e) {
   $($(e.delegateTarget).children('.votes-sum')[0]).html(templateVotesSum(response));
   addAlert(response.message, 'success')
 }
+
+function handlerError(e) {
+  const response = e.originalEvent.detail[0];
+  addAlert(response.error, 'error');
+};
