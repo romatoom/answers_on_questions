@@ -2,7 +2,7 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_voteable, only: %w[like dislike reset_vote]
+    before_action :set_voteable, only: %w[like dislike reset_vote success_response_for_vote success_response_for_revote]
   end
 
   def like
@@ -26,14 +26,7 @@ module Voted
 
     if @vote&.destroy
       status = :ok
-      response = {
-        message: "You reset vote for the #{controller_name.singularize}",
-        can_vote: true,
-        can_revote: false,
-        votes_sum: @voteable.votes_sum,
-        btn_like_link: polymorphic_url(@voteable, action: :like),
-        btn_dislike_link: polymorphic_url(@voteable, action: :dislike)
-      }
+      response = success_response_for_revote
     else
       status = :unsupported_entity
       response = {
@@ -52,9 +45,6 @@ module Voted
       return
     end
 
-    liked = value > 0
-    success_message = liked ? "You voted for the #{controller_name.singularize}" : "You voted down the #{controller_name.singularize}"
-
     @voteable.votes.new(user: current_user, value: value)
 
     response = nil
@@ -62,14 +52,7 @@ module Voted
 
     if @voteable.save
       status = :ok
-      response = {
-        message: success_message,
-        can_vote: false,
-        can_revote: true,
-        votes_sum: @voteable.votes_sum,
-        liked: liked,
-        btn_revote_link: polymorphic_url(@voteable, action: :reset_vote)
-      }
+      response = success_response_for_vote(value)
     else
       status = :unsupported_entity
       response = {
@@ -86,6 +69,31 @@ module Voted
         render json: response, status: status
       end
     end
+  end
+
+  def success_response_for_vote(value)
+    liked = value > 0
+    success_message = liked ? "You voted for the #{controller_name.singularize}" : "You voted down the #{controller_name.singularize}"
+
+    {
+      message: success_message,
+      can_vote: false,
+      can_revote: true,
+      votes_sum: @voteable.votes_sum,
+      liked: liked,
+      btn_revote_link: polymorphic_url(@voteable, action: :reset_vote)
+    }
+  end
+
+  def success_response_for_revote
+    {
+      message: "You reset vote for the #{controller_name.singularize}",
+      can_vote: true,
+      can_revote: false,
+      votes_sum: @voteable.votes_sum,
+      btn_like_link: polymorphic_url(@voteable, action: :like),
+      btn_dislike_link: polymorphic_url(@voteable, action: :dislike)
+    }
   end
 
   def model_klass
