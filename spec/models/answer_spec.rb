@@ -15,7 +15,7 @@ RSpec.describe Answer, type: :model do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
 
-  describe 'mark_as_best method' do
+  describe '#mark_as_best' do
     let(:question_author) { create(:user ) }
     let!(:question) { create(:question, author: question_author, reward_attributes: attributes_for(:reward)) }
 
@@ -43,4 +43,6 @@ RSpec.describe Answer, type: :model do
       expect(answer1_author.reload.rewards).to eq []
     end
   end
+
+  it_behaves_like 'voteable'
 end

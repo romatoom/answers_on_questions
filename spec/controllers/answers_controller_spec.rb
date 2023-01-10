@@ -184,7 +184,7 @@ RSpec.describe AnswersController, type: :controller do
     let!(:answer2) { create(:answer, question: question_of_author) }
 
     subject(:mark_best_answer) do
-      post :mark_answer_as_best, params: { question_id: question_of_author.id, id: answer1.id, format: :js }
+      post :mark_answer_as_best, params: { id: answer1.id, format: :js }
     end
 
     context 'with author of question' do
@@ -242,4 +242,6 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  it_behaves_like 'voted'
 end

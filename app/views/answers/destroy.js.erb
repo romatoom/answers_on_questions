@@ -3,7 +3,7 @@
 
   addAlert('Answer has been removed successfully.', 'success');
 
-  <% if @question.answers.count.zero? %>
+  <% if @answer.question.answers.count.zero? %>
     $('.answers').append('<span class="no-answers">No answers</span>');
   <% end %>
 <% end %>

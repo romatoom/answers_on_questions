@@ -1,0 +1,39 @@
+- if current_user.present?
+    div.vote.mb-3
+      - if current_user.can_vote?(voteable)
+
+        = link_to polymorphic_path(voteable, action: :like),
+          method: :patch,
+          class: 'btn btn-outline-success like me-2',
+          remote: true,
+          data: { type: 'json' } do
+            i.bi.bi-hand-thumbs-up
+
+        = link_to polymorphic_path(voteable, action: :dislike),
+          method: :patch,
+          class: 'btn btn-outline-danger dislike me-2',
+          remote: true,
+          data: { type: 'json' } do
+            i.bi.bi-hand-thumbs-down
+
+      - elsif current_user.can_revote?(voteable)
+
+        - if current_user.like?(voteable)
+          div.btn.btn-success.like.me-2
+            i.bi.bi-hand-thumbs-up
+
+          div.btn.btn-outline-danger.dislike.me-2
+            i.bi.bi-hand-thumbs-down
+
+        - else
+          div.btn.btn-outline-success.like.me-2
+            i.bi.bi-hand-thumbs-up
+
+          div.btn.btn-danger.dislike.me-2
+            i.bi.bi-hand-thumbs-down
+
+        = link_to 'Revote', polymorphic_path(voteable, action: :reset_vote),
+          method: :patch,
+          class: 'btn btn-outline-primary reset-vote',
+          remote: true,
+          data: { type: 'json' }
