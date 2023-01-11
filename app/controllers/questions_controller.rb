@@ -2,10 +2,13 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show destroy update delete_file_attachments]
+  before_action :set_question, only: %i[show destroy update delete_file_attachments publish_question]
+  after_action :publish_question, only: %i[create]
 
   def index
     @questions = Question.order(:id)
+    gon.current_user_id = current_user&.id
+    gon.token = form_authenticity_token
   end
 
   def new
@@ -73,5 +76,16 @@ class QuestionsController < ApplicationController
     files_ids.each do |file_id|
       @question.files.find(file_id).purge
     end
+  end
+
+  def publish_question
+    return if @question.errors.any?
+
+    files = @question.files.map { |file| { filename: file.filename.to_s, url: url_for(file) } }
+    links = @question.links.map { |link| { name: link.name, url: link.url } }
+
+    ActionCable.server.broadcast('questions_channel', {
+      question: @question.attributes.merge(files: files, links: links, url: url_for(@question))
+    })
   end
 end

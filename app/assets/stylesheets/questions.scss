@@ -1,0 +1,10 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/_variables.scss";
+
+.questions>li {
+  padding: 20px;
+  border-radius: 6px;
+  background-color: $gray-100;
+  border: 1px solid $gray-200;
+}
+
