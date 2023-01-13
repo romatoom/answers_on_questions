@@ -16,25 +16,25 @@
       </span>
     </p>
     {{else}}
-      Not attached
+    Not attached
     {{/if}}
   </div>
 
   {{#if question.links}}
-    <div class="mb-3">
-      <div class="mb-2">
-        Links:
-      </div>
-
-      <ul class="links">
-        {{#each question.links}}
-        <li>
-          <a href="{{this.url}}" target="_blank" class="resource-link">
-            {{this.name}}
-          </a>
-        </li>
-        {{/each}}
-      </ul>
+  <div class="mb-3">
+    <div class="mb-2">
+      Links:
     </div>
+
+    <ul class="links">
+      {{#each question.links}}
+      <li>
+        <a href="{{this.url}}" target="_blank" class="resource-link">
+          {{this.name}}
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
   {{/if}}
 </li>

@@ -1,41 +1,47 @@
-{{#if can_vote}}
+<div class="votes-sum">
+  Votes: {{ votes_sum }}
+</div>
 
-  <a class="btn btn-outline-success like me-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
-    href="{{btn_like_link}}">
-    <i class="bi bi-hand-thumbs-up"></i>
-  </a>
+<div class="vote mb-3">
+  {{#if can_vote}}
 
-  <a class="btn btn-outline-danger dislike me-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
-    href="{{btn_dislike_link}}">
-    <i class="bi bi-hand-thumbs-down"></i>
-  </a>
+    <a class="btn btn-outline-success like me-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
+      href="{{btn_like_link}}">
+      <i class="bi bi-hand-thumbs-up"></i>
+    </a>
 
-{{else}}
+    <a class="btn btn-outline-danger dislike me-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
+      href="{{btn_dislike_link}}">
+      <i class="bi bi-hand-thumbs-down"></i>
+    </a>
 
-  {{#if can_revote}}
+  {{else}}
 
-    {{#if liked}}
-      <div class="btn btn-success like me-2">
-        <i class="bi bi-hand-thumbs-up"></i>
-      </div>
+    {{#if can_revote}}
 
-      <div class="btn btn-outline-danger dislike me-2">
-        <i class="bi bi-hand-thumbs-down"></i>
-      </div>
-    {{else}}
-      <div class="btn btn-outline-success like me-2">
-        <i class="bi bi-hand-thumbs-up"></i>
-      </div>
+      {{#if liked}}
+        <div class="btn btn-success like me-2">
+          <i class="bi bi-hand-thumbs-up"></i>
+        </div>
 
-      <div class="btn btn-danger dislike me-2">
-        <i class="bi bi-hand-thumbs-down"></i>
-      </div>
+        <div class="btn btn-outline-danger dislike me-2">
+          <i class="bi bi-hand-thumbs-down"></i>
+        </div>
+      {{else}}
+        <div class="btn btn-outline-success like me-2">
+          <i class="bi bi-hand-thumbs-up"></i>
+        </div>
+
+        <div class="btn btn-danger dislike me-2">
+          <i class="bi bi-hand-thumbs-down"></i>
+        </div>
+      {{/if}}
+
+      <a class="btn btn-outline-primary reset-vote" data-type="json" data-remote="true" rel="nofollow" data-method="patch"
+        href="{{btn_revote_link}}">
+        Revote
+      </a>
     {{/if}}
 
-    <a class="btn btn-outline-primary reset-vote" data-type="json" data-remote="true" rel="nofollow"
-      data-method="patch" href="{{btn_revote_link}}">
-      Revote
-    </a>
   {{/if}}
-
-{{/if}}
+</div>

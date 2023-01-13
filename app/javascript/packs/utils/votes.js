@@ -1,8 +1,7 @@
-$(document).on('turbolinks:load', function() {
-  const templateVote = require('../../templates/vote.hbs');
-  const templateVotesSum = require('../../templates/votes_sum.hbs');
+const templateVote = require('../../templates/vote.hbs');
 
-  $('.vote-block')
+$(document).on('turbolinks:load', function() {
+  $('.container')
     .on('ajax:success', '.like', handlerSuccess)
     .on('ajax:error', '.like', handlerError)
     .on('ajax:success', '.dislike', handlerSuccess)
@@ -13,9 +12,8 @@ $(document).on('turbolinks:load', function() {
 
 function handlerSuccess(e) {
   const response = e.originalEvent.detail[0];
-  $(this).parent().html(templateVote(response));
-  $($(e.delegateTarget).children('.votes-sum')[0]).html(templateVotesSum(response));
-  addAlert(response.message, 'success')
+  $(this).parents('.vote-block').html(templateVote(response));
+  addAlert(response.message, 'success');
 }
 
 function handlerError(e) {

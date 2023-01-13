@@ -1,4 +1,9 @@
-- if current_user.present?
+div.vote-block
+  div.votes-sum
+    'Votes:
+    = voteable.votes_sum
+
+  - if current_user.present?
     div.vote.mb-3
       - if current_user.can_vote?(voteable)
 

@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
 
   consumer.subscriptions.create("QuestionsChannel", {
     connected() {
-      console.log('Connected to questions_channel');
+      console.log('Connected to questions channel');
     },
 
     disconnected() {

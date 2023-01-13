@@ -5,10 +5,9 @@ li id="question_#{question.id}"
     'Files:
     = render "shared/file_list", resource: question, is_uploaded_files: false
 
-  div.mb-3
-    - if question.links.present?
-      div.mb-3
-        = render "shared/links", links: question.links, with_matching: false
+  - if question.links.present?
+    div.mb-3
+      = render "shared/links", links: question.links, with_matching: false
 
   - if current_user&.author_of?(question)
     = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'

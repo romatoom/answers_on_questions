@@ -49,6 +49,44 @@ feature 'User can write an answer', %q(
     end
   end
 
+  context 'multiple sessions' do
+    given(:user) { create(:user) }
+    given(:question) { create(:question, author: user) }
+
+    scenario "answer appears on another user's page", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+
+        within '.answers' do
+          expect(page).to_not have_content 'Answer body'
+        end
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'You can answer the question here', with: 'Answer body'
+        click_on 'Answer'
+
+        expect(current_path).to eq question_path(question)
+        expect(page).to have_content 'Answer has been created successfully.'
+
+        within '.answers' do
+          expect(page).to have_content 'Answer body'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        within '.answers' do
+          expect(page).to have_content 'Answer body'
+        end
+      end
+    end
+  end
+
   scenario "Unauthenticate user can't write an answer" do
     visit question_path(question)
 

@@ -7,8 +7,6 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.order(:id)
-    gon.current_user_id = current_user&.id
-    gon.token = form_authenticity_token
   end
 
   def new
@@ -21,6 +19,11 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.new
     @answers = @question.answers.sort_by_best
+
+    gon.push({
+      :sid => session&.id&.public_id,
+      :question_id => @question.id
+    })
   end
 
   def create

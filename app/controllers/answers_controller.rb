@@ -2,8 +2,9 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: %i[new create show update]
-  before_action :set_question, only: %i[create]
-  before_action :set_answer, only: %i[show update destroy mark_answer_as_best]
+  before_action :set_question, only: %i[create publish_answer]
+  before_action :set_answer, only: %i[show update destroy mark_answer_as_best publish_answer]
+  after_action :publish_answer, only: %i[create]
 
   def show; end
 
@@ -62,5 +63,22 @@ class AnswersController < ApplicationController
     files_ids.each do |file_id|
       @answer.files.find(file_id).purge
     end
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    files = @answer.files.map { |file| { filename: file.filename.to_s, url: url_for(file) } }
+    links = @answer.links.map { |link| { name: link.name, url: link.url } }
+    votes = {
+      sum: @answer.votes_sum,
+      like_url: polymorphic_url(@answer, action: :like),
+      dislike_url: polymorphic_url(@answer, action: :dislike)
+    }
+
+    ActionCable.server.broadcast("question_channel_#{@question.id}", {
+      answer: @answer.attributes.merge(files:, links:, votes:),
+      sid: session.id.public_id
+    })
   end
 end
