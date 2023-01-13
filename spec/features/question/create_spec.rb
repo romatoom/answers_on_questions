@@ -69,11 +69,21 @@ feature 'User can create question', %q(
 
   context 'multiple sessions' do
     given(:user) { create(:user) }
+    given(:another_user) { create(:user) }
 
     scenario "question appears on another user's page" do
       Capybara.using_session('user') do
         sign_in(user)
         visit questions_path
+      end
+
+      Capybara.using_session('another_user') do
+        sign_in(another_user)
+        visit questions_path
+
+        within '.questions' do
+          expect(page).to_not have_content 'Question title'
+        end
       end
 
       Capybara.using_session('guest') do
@@ -98,6 +108,12 @@ feature 'User can create question', %q(
         within '.question' do
           expect(page).to have_content 'Question title'
           expect(page).to have_content 'Question body'
+        end
+      end
+
+      Capybara.using_session('another_user') do
+        within '.questions' do
+          expect(page).to_not have_content 'Question title'
         end
       end
 
