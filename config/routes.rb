@@ -9,14 +9,20 @@ Rails.application.routes.draw do
     end
   end
 
+  concern :commenteable do
+    member do
+      patch :add_comment
+    end
+  end
+
   devise_for :users
 
   resources :rewards, only: :index
 
-  resources :questions, only: %i[new create update show index destroy], concerns: [:voteable], shallow: true do
+  resources :questions, only: %i[new create update show index destroy], concerns: [:voteable, :commenteable], shallow: true do
     delete :delete_file_attachment, on: :member
 
-    resources :answers, only: %i[create update show destroy], concerns: [:voteable] do
+    resources :answers, only: %i[create update show destroy], concerns: [:voteable, :commenteable] do
       post :mark_answer_as_best, on: :member
     end
   end
