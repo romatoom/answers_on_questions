@@ -2,10 +2,9 @@ require 'rails_helper'
 
 shared_examples_for 'commented' do
   describe 'PATCH #add_comment' do
-=begin
     let!(:user) { create(:user) }
-    let!(:another_user) { create(:user) }
-    let!(:commenteable) { create(described_class.to_s.sub!('Controller', '').underscore.singularize.to_sym) }
+    let!(:commenteable_type) { described_class.to_s.sub!('Controller', '').singularize }
+    let!(:commenteable) { create(commenteable_type.underscore.to_sym) }
 
     subject(:add_comment) do
       patch :add_comment, params: {
@@ -29,7 +28,19 @@ shared_examples_for 'commented' do
         add_comment
         expect(response.status).to eq 200
       end
+
+      it 'add comment to commenteable' do
+        add_comment
+
+        last_comment = commenteable.reload.comments.last
+        expect(last_comment.body).to eq 'Comment body'
+        expect(last_comment.commenteable_type).to eq commenteable_type
+        expect(last_comment.commenteable_id).to eq commenteable.id
+      end
+
+      it 'increment comments count to commenteable' do
+        expect { add_comment }.to change { commenteable.reload.comments.length }.by(1)
+      end
     end
-=end
   end
 end

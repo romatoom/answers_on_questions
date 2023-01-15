@@ -1,0 +1,22 @@
+.comments
+  - if resource.comments.present?
+    .mb-3
+      .fw-bold Comments:
+      - resource.comments.each do |c|
+        .comment
+          div.comment-author.mb-1
+            'Comment by #{c.author.email}
+          div.comment-body.mb-1
+            = c.body
+          div.comment-date
+            'Created: #{c.formatted_creation_date}
+
+- if current_user.present?
+  = form_with url: "#{polymorphic_url(resource)}/add_comment", method: :patch, local: false, class: "add_comment" do |f|
+    div.comment-errors
+
+    div.mb-3
+      = f.label :body, 'Type your comment', class: 'form-label'
+      = f.text_area :body, rows: 10, class: 'form-control comment-body'
+
+    = f.submit 'Comment', class: 'btn btn-primary'

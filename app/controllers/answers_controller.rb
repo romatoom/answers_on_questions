@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
   include Voted
+  include Commented
 
   before_action :authenticate_user!, except: %i[new create show update]
   before_action :set_question, only: %i[create publish_answer]
