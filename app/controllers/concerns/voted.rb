@@ -15,7 +15,7 @@ module Voted
 
   def reset_vote
     if !current_user.can_revote?(@voteable)
-      respond_to_json({ error: "You can not revote for #{controller_name.singularize}" }, :unsupported_entity)
+      respond_to_json({ error: "You can not revote for #{controller_name.singularize}" }, :unprocessable_entity)
       return
     end
 
@@ -28,7 +28,7 @@ module Voted
       status = :ok
       response = success_response_for_revote
     else
-      status = :unsupported_entity
+      status = :unprocessable_entity
       response = {
         error: "Failed to reset vote for #{controller_name.singularize}"
       }
@@ -41,7 +41,7 @@ module Voted
 
   def vote(value)
     if !current_user.can_vote?(@voteable)
-      respond_to_json({ error: "You can not vote for #{controller_name.singularize}" }, :unsupported_entity)
+      respond_to_json({ error: "You can not vote for #{controller_name.singularize}" }, :unprocessable_entity)
       return
     end
 
@@ -54,7 +54,7 @@ module Voted
       status = :ok
       response = success_response_for_vote(value)
     else
-      status = :unsupported_entity
+      status = :unprocessable_entity
       response = {
         error: "Error saving #{controller_name.singularize}"
       }

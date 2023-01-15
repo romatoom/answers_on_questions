@@ -6,6 +6,7 @@ RSpec.describe Comment, type: :model do
 
   it { should validate_presence_of :commenteable }
   it { should validate_presence_of :author }
+  it { should validate_presence_of :body }
 
   describe '#formatted_creation_date' do
     let(:date_of_creation) { Time.current }

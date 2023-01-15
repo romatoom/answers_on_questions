@@ -18,5 +18,5 @@ function handlerSuccess(e) {
 
 function handlerError(e) {
   const response = e.originalEvent.detail[0];
-  addAlert(response.error, 'error');
+  addAlert(response.error, 'alert');
 };

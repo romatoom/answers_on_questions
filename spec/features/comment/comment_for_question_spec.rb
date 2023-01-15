@@ -7,7 +7,7 @@ feature 'User can comment question', %q(
 ) do
 
   given!(:user) { create(:user) }
-  given(:another_user) { create(:user) }
+  given!(:another_user) { create(:user) }
   given!(:question) { create(:question) }
 
   context 'multiple sessions', js: true do
@@ -52,7 +52,7 @@ feature 'User can comment question', %q(
           expect(page).to have_content 'Comment has been added successfully'
         end
 
-        within '.question .comments' do
+        within '.comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Question comment'
           expect(page).to have_content "#{question.comments.last.formatted_creation_date}"
@@ -60,7 +60,7 @@ feature 'User can comment question', %q(
       end
 
       Capybara.using_session('another_user') do
-        within '.question .comments' do
+        within '.comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Question comment'
           expect(page).to have_content "#{question.comments.last.formatted_creation_date}"
@@ -68,7 +68,7 @@ feature 'User can comment question', %q(
       end
 
       Capybara.using_session('guest') do
-        within '.question .comments' do
+        within '.comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Question comment'
           expect(page).to have_content "#{question.comments.last.formatted_creation_date}"
@@ -77,15 +77,34 @@ feature 'User can comment question', %q(
     end
   end
 
-  context 'when the user is unauthenticated' do
-    background do
-      visit question_path(question)
+  scenario "question comment with error", js: true do
+    sign_in(user)
+    visit question_path(question)
+
+    within '.question' do
+      click_on 'Comment'
+      wait_for_ajax
     end
 
-    scenario 'no showed form for add comment', js: true do
-      within '.question' do
-        expect(page).to_not have_selector('.add_comment')
-      end
+    within '.alerts' do
+      expect(page).to have_content 'Error add comment for question'
+    end
+
+    within '.comment-errors' do
+      expect(page).to have_content "Body can't be blank"
+    end
+
+    within '.comments' do
+      expect(page).to_not have_content "Comment by #{user.email}"
+      expect(page).to_not have_content 'Question comment'
+    end
+  end
+
+  scenario 'when the user is unauthenticated' do
+    visit question_path(question)
+
+    within '.question' do
+      expect(page).to_not have_selector('.add_comment')
     end
   end
 end

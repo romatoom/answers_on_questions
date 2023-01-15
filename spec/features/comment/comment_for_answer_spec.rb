@@ -53,7 +53,7 @@ feature 'User can comment answer', %q(
           expect(page).to have_content 'Comment has been added successfully'
         end
 
-        within '.answer .comments' do
+        within '.answers .comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Answer comment'
           expect(page).to have_content "#{answer.comments.last.formatted_creation_date}"
@@ -61,7 +61,7 @@ feature 'User can comment answer', %q(
       end
 
       Capybara.using_session('another_user') do
-        within '.answer .comments' do
+        within '.answers .comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Answer comment'
           expect(page).to have_content "#{answer.comments.last.formatted_creation_date}"
@@ -69,7 +69,7 @@ feature 'User can comment answer', %q(
       end
 
       Capybara.using_session('guest') do
-        within '.answer .comments' do
+        within '.answers .comments' do
           expect(page).to have_content "Comment by #{user.email}"
           expect(page).to have_content 'Answer comment'
           expect(page).to have_content "#{answer.comments.last.formatted_creation_date}"
@@ -78,15 +78,30 @@ feature 'User can comment answer', %q(
     end
   end
 
-  context 'when the user is unauthenticated' do
-    background do
-      visit question_path(question)
+  scenario "answer comment with error", js: true do
+    sign_in(user)
+    visit question_path(question)
+
+    within '.answers' do
+      click_on 'Comment'
+      wait_for_ajax
     end
 
-    scenario 'no showed form for add comment', js: true do
-      within '.answers' do
-        expect(page).to_not have_selector('.add_comment')
-      end
+    within '.alerts' do
+      expect(page).to have_content 'Error add comment for answer'
+    end
+
+    within '.answers .comments' do
+      expect(page).to_not have_content "Comment by #{user.email}"
+      expect(page).to_not have_content 'Answer comment'
+    end
+  end
+
+  scenario 'when the user is unauthenticated' do
+    visit question_path(question)
+
+    within '.answers' do
+      expect(page).to_not have_selector('.add_comment')
     end
   end
 end

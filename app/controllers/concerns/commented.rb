@@ -16,9 +16,13 @@ module Commented
       status = :ok
       response = success_response_for_comment(@comment)
     else
-      status = :unsupported_entity
+      status = :unprocessable_entity
       response = {
-        error: "Error add comment for #{controller_name.singularize}"
+        errors: {
+          count: @comment.errors.count,
+          full_messages: @comment.errors.full_messages
+        },
+        error_alert: "Error add comment for #{controller_name.singularize}"
       }
     end
 
@@ -64,7 +68,8 @@ module Commented
   end
 
   def publish_comment
-    return if @commenteable.errors.any?
+    @comment.valid?
+    return if @comment.errors.any?
 
     ActionCable.server.broadcast("comments_channel", {
       comment: {

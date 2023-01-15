@@ -1,4 +1,5 @@
 const templateComment = require('../../templates/comment.hbs');
+const templateErrors = require('../../templates/errors.hbs');
 
 $(document).on('turbolinks:load', function() {
   $('.container')
@@ -8,6 +9,7 @@ $(document).on('turbolinks:load', function() {
 
 function handlerSuccess(e) {
   const response = e.originalEvent.detail[0];
+  $(this).find('.comment-errors').html('');
   $(this).find('.comment-body').val('');
   $(this).parents().children('.comments').append(templateComment(response));
   addAlert(response.message, 'success');
@@ -15,6 +17,7 @@ function handlerSuccess(e) {
 
 function handlerError(e) {
   const response = e.originalEvent.detail[0];
-  addAlert(response.error, 'error');
+  $(this).find('.comment-errors').html(templateErrors(response));
+  addAlert(response.error_alert, 'alert');
 };
 
