@@ -1,10 +1,15 @@
-import consumer from "./consumer"
+import consumer from "./consumer";
+import channelExist from "./check_channel_exist";
+
+const templateQuestion = require('../templates/question.hbs');
 
 $(document).on('turbolinks:load', function() {
-  const templateQuestion = require('../templates/question.hbs');
-  const questionsList = $('.questions')
+  const questionsList = $('.questions');
+  const channel = "QuestionsChannel";
 
-  consumer.subscriptions.create("QuestionsChannel", {
+  if (channelExist(channel)) return;
+
+  consumer.subscriptions.create(channel, {
     connected() {
       console.log('Connected to questions channel');
     },
@@ -17,4 +22,5 @@ $(document).on('turbolinks:load', function() {
       questionsList.append(question);
     }
   });
+
 });

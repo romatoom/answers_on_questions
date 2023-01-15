@@ -1,9 +1,14 @@
 import consumer from "./consumer"
+import channelExist from "./check_channel_exist"
+
+const templateComment = require('../templates/comment.hbs');
 
 $(document).on('turbolinks:load', function() {
-  const templateComment = require('../templates/comment.hbs');
+  const channel = "CommentsChannel";
 
-  consumer.subscriptions.create("CommentsChannel", {
+  if (channelExist(channel)) return;
+
+  consumer.subscriptions.create(channel, {
     connected() {
       console.log("Connected to comments channel");
     },
