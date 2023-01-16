@@ -1,9 +1,7 @@
 h1 Question
 
 div.question.mb-5
-  div.vote-block
-    = render 'shared/votes_sum', voteable: @question
-    = render 'shared/vote', voteable: @question
+  = render 'shared/vote', voteable: @question
 
   div.mb-3
     div.fw-bold Title
@@ -11,7 +9,7 @@ div.question.mb-5
 
   div.mb-3
     div.fw-bold Body
-    = @question.body.html_safe
+    = @question.body
 
   div.mb-3
     div.fw-bold Files:
@@ -27,6 +25,8 @@ div.question.mb-5
         'Best answer reward
       div= @question.reward.title
       = image_tag url_for(@question.reward.image), class: "best-answer-reward"
+
+  = render 'shared/comments', resource: @question
 
 div.mb-5
   div.mb-2.fw-bold Answers

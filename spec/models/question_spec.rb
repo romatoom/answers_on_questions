@@ -18,4 +18,5 @@ RSpec.describe Question, type: :model do
   end
 
   it_behaves_like 'voteable'
+  it_behaves_like 'commenteable'
 end

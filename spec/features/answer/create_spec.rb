@@ -49,6 +49,84 @@ feature 'User can write an answer', %q(
     end
   end
 
+  context 'multiple sessions' do
+    given(:user) { create(:user) }
+    given(:another_user) { create(:user) }
+    given(:question) { create(:question, author: user) }
+
+    scenario "answer appears on another user's page", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('another user') do
+        sign_in(another_user)
+        visit question_path(question)
+
+        within '.answers' do
+          expect(page).to_not have_content 'Answer body'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+
+        within '.answers' do
+          expect(page).to_not have_content 'Answer body'
+        end
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'You can answer the question here', with: 'Answer body'
+        click_on 'Answer'
+
+        expect(current_path).to eq question_path(question)
+        expect(page).to have_content 'Answer has been created successfully.'
+
+        within '.answers' do
+          expect(page).to have_content 'Answer body'
+        end
+      end
+
+      Capybara.using_session('another user') do
+        within '.answers' do
+          expect(page).to have_content 'Answer body'
+
+          expect(page).to_not have_content 'Revote'
+
+          find('.like').click
+          wait_for_ajax
+        end
+
+        within '.alerts' do
+          expect(page).to have_content 'You voted for the answer'
+        end
+
+        within '.answers' do
+          expect(page).to have_content 'Revote'
+          expect(page).to have_content 'Votes: 1'
+
+          click_on 'Revote'
+          wait_for_ajax
+
+          expect(page).to_not have_content 'Revote'
+          expect(page).to have_content 'Votes: 0'
+        end
+
+        within '.alerts' do
+          expect(page).to have_content 'You reset vote for the answer'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        within '.answers' do
+          expect(page).to have_content 'Answer body'
+        end
+      end
+    end
+  end
+
   scenario "Unauthenticate user can't write an answer" do
     visit question_path(question)
 

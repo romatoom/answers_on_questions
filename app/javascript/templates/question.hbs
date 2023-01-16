@@ -1,0 +1,40 @@
+<li id="question_{{question.id}}">
+  <a href="{{question.url}}">{{question.title}}</a>
+
+  <div class="mb-2">
+    Files:
+    {{#if question.files}}
+    <p id="files-area">
+      <span id="files-names">
+        {{#each question.files}}
+        <span class="file-block">
+          <a href="{{this.url}}" target="_blank" class="name">
+            {{this.filename}}
+          </a>
+        </span>
+        {{/each}}
+      </span>
+    </p>
+    {{else}}
+    Not attached
+    {{/if}}
+  </div>
+
+  {{#if question.links}}
+  <div class="mb-3">
+    <div class="mb-2">
+      Links:
+    </div>
+
+    <ul class="links">
+      {{#each question.links}}
+      <li>
+        <a href="{{this.url}}" target="_blank" class="resource-link">
+          {{this.name}}
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+</li>

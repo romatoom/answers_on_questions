@@ -1,0 +1,55 @@
+<li class="answer" id="answer_{{answer.id}}">
+  <div class="vote-block">
+    <div class="votes-sum">Votes: {{answer.votes.sum}}</div>
+    <div class="vote mb-3">
+      <a class="btn btn-outline-success like me-2" data-type="json" data-remote="true" rel="nofollow"
+        data-method="patch" href="{{answer.votes.like_url}}">
+        <i class="bi bi-hand-thumbs-up"></i>
+      </a>
+      <a class="btn btn-outline-danger dislike me-2" data-type="json" data-remote="true" rel="nofollow"
+        data-method="patch" href="{{answer.votes.dislike_url}}">
+        <i class="bi bi-hand-thumbs-down"></i>
+      </a>
+    </div>
+  </div>
+
+  {{answer.body}}
+
+  <div class="mb-3">Files:
+    {{#if answer.files}}
+    <p id="files-area">
+      <span id="filesList">
+        <span id="files-names">
+          {{#each answer.files}}
+          <span class="file-block">
+            <a href="{{this.url}}" target="_blank" class="name">
+              {{this.filename}}
+            </a>
+          </span>
+          {{/each}}
+        </span>
+      </span>
+    </p>
+    {{else}}
+    Not attached
+    {{/if}}
+  </div>
+
+  {{#if answer.links}}
+  <div class="mb-3">
+    <div class="mb-2">
+      Links:
+    </div>
+
+    <ul class="links">
+      {{#each answer.links}}
+      <li>
+        <a href="{{this.url}}" target="_blank" class="resource-link">
+          {{this.name}}
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+</li>
