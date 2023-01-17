@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_many :rewards
   has_many :votes
 
+  def self.find_for_oauth(auth)
+  end
+
   def author_of?(record)
     record.respond_to?(:author) && record.author == self
   end
