@@ -3,8 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         # :confirmable,
-         :omniauthable, omniauth_providers: [:github]
+         :omniauthable, omniauth_providers: [:github, :telegram]
 
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
@@ -14,6 +13,11 @@ class User < ApplicationRecord
 
   def self.find_for_oauth(auth)
     FindForOauthService.new(auth).call
+  end
+
+  def self.create_with_email(email)
+    password = Devise.friendly_token[0, 20]
+    user = User.create!(email: email, password: password, password_confirmation: password)
   end
 
   def create_authorization(auth)

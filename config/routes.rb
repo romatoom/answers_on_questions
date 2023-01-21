@@ -29,5 +29,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :confirmed_emails, only: %i[new create] do
+    collection do
+      get :confirm
+    end
+  end
+
   mount ActionCable.server => '/cable'
 end

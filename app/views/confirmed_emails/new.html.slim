@@ -1,0 +1,14 @@
+h1 Confirm your email
+
+= form_with model: @confirmed_email, html: { id: "confirm-email-form" } do |f|
+  div.email-errors
+    = render 'shared/errors', resource: @confirmed_email
+
+  div.mb-3
+    = f.label :email, 'Email', class: 'form-label'
+    = f.text_field :email, id: :email, class: 'form-control'
+
+  = f.hidden_field :provider, value: @provider
+  = f.hidden_field :uid, value: @uid
+
+  = f.submit 'Send confirmation email', class: 'btn btn-primary'
