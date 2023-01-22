@@ -14,6 +14,14 @@ RSpec.describe FindForOauthService do
   end
 
   context 'user has not authorization' do
+    context "auth don't have info about email" do
+      let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '1', info: {}) }
+
+      it 'return nil' do
+        expect(subject.call).to be_nil
+      end
+    end
+
     context 'user already exists' do
       let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '1', info: { email: user.email }) }
 

@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :confirmed_email do
-    email { "MyString" }
-    provider { "MyString" }
-    uid { "MyString" }
-    confirmation_token { "MyString" }
+    email { "mail@example.com" }
+    provider { "telegram" }
+    uid { 1 }
+    confirmation_token { "Confirnation_token" }
   end
 end

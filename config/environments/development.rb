@@ -77,6 +77,9 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-  config.hosts << "3504-15-161-81-7.eu.ngrok.io"
 
+  # A telegram bot was created to work with Telegram OAuth.
+  # The bot domain setting does not support the localhost value, so the work was done through ngrok.
+  # The following is required for the application to work:
+  config.hosts << "3504-15-161-81-7.eu.ngrok.io"
 end

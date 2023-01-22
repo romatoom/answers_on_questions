@@ -8,11 +8,17 @@ module OmniauthMacros
       'uid' => '12345',
       'info' => {
         'name' => 'Mockuser',
-        'email' => 'mockuser@example.com',
-        'image' => 'mock_user_thumbnail_url'
-      },
-      'credentials' => {
-        'token' => 'mock_token'
+        'email' => 'mockuser@example.com'
+      }
+    })
+  end
+
+  def telegram_mock_auth_hash
+    OmniAuth.config.mock_auth[:telegram] = OmniAuth::AuthHash.new({
+      'provider' => 'telegram',
+      'uid' => '12345',
+      'info' => {
+        'nickname' => 'Mockuser',
       }
     })
   end

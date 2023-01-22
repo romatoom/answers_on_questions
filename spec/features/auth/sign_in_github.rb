@@ -5,29 +5,29 @@ feature 'User can sign in via github', %q(
   As an unauthenticated user
   I'd like to be able to sign in via github
 ) do
-  describe "access top page" do
-    it "can sign in user with Github account" do
+  describe 'Github' do
+    scenario 'can sign in user with Github account' do
       visit new_user_session_path
-      expect(page).to have_content "Sign in with GitHub"
+      expect(page).to have_content 'Sign in with GitHub'
 
       github_mock_auth_hash
 
-      click_link "Sign in with GitHub"
+      click_link 'Sign in with GitHub'
 
       within '.alerts' do
-        expect(page).to have_content "Successfully authenticated from Github account."
+        expect(page).to have_content 'Successfully authenticated from Github account.'
       end
 
-      expect(page).to have_content "Sign out"
+      expect(page).to have_content 'Sign out'
     end
 
-    it "can handle authentication error" do
+    it 'can handle authentication error' do
       visit new_user_session_path
-      expect(page).to have_content "Sign in with GitHub"
+      expect(page).to have_content 'Sign in with GitHub'
 
       OmniAuth.config.mock_auth[:github] = :invalid_credentials
 
-      click_link "Sign in with GitHub"
+      click_link 'Sign in with GitHub'
 
       within '.alerts' do
         expect(page).to have_content 'Could not authenticate you from GitHub because "Invalid credentials"'

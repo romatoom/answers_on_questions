@@ -6,7 +6,12 @@ class ConfirmedEmailsController < ApplicationController
   end
 
   def create
-    existing_confirmed_email = ConfirmedEmail.find(confirmed_email_params)
+    existing_confirmed_email = ConfirmedEmail.where(
+      provider: confirmed_email_params[:provider],
+      uid: confirmed_email_params[:uid],
+      email: confirmed_email_params[:email]
+    ).first
+
     @confirmed_email = existing_confirmed_email || ConfirmedEmail.new(confirmed_email_params.merge(confirmation_token: Devise.friendly_token(50)))
 
     if @confirmed_email.save
@@ -38,10 +43,6 @@ class ConfirmedEmailsController < ApplicationController
   end
 
   private
-
-  def create_user
-
-  end
 
   def confirmed_email_params
     params.require(:confirmed_email).permit(:email, :uid, :provider)

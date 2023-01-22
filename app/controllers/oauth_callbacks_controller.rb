@@ -20,21 +20,5 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
     else
       redirect_to new_confirmed_email_path(provider: auth.provider, uid: auth.uid), notice: 'Confirm your email'
     end
-=begin
-{
-  "provider":"telegram",
-  "uid":"1846861338",
-  "info": {
-    "name":"Роман Иванов",
-    "nickname":"romatoom",
-    "first_name":"Роман",
-    "last_name":"Иванов",
-    "image":"https://t.me/i/userpic/320/k-keR44znWC4E7P7GUVDfLEokTtxoU4VmmlkpYT2i1k.jpg"},
-    "credentials":{},
-    "extra":{
-      "auth_date":"2023-01-19T20:19:37.000+05:00"
-    }
-}
-=end
   end
 end
