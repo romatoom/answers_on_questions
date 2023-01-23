@@ -15,7 +15,9 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'oauth_callbacks'
+  }
 
   resources :rewards, only: :index
 
@@ -24,6 +26,12 @@ Rails.application.routes.draw do
 
     resources :answers, only: %i[create update show destroy], concerns: [:voteable, :commenteable] do
       post :mark_answer_as_best, on: :member
+    end
+  end
+
+  resources :confirmed_emails, only: %i[new create] do
+    collection do
+      get :confirm
     end
   end
 

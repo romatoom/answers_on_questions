@@ -31,20 +31,17 @@ gem 'jbuilder', '~> 2.7'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-
 gem 'rubocop-rails', require: false
-
 gem 'slim-rails'
-
 gem 'devise'
-
 gem 'net-smtp', require: false
-
 gem 'aws-sdk-s3', require: false
-
 gem 'cocoon'
-
 gem 'gon', '~> 6.1'
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-github'
+gem 'omniauth-telegram'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -62,11 +59,14 @@ group :development do
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem "letter_opener", group: :development
 end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
+  gem 'capybara-email'
+
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
   gem 'selenium-webdriver'

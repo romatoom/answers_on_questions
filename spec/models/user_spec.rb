@@ -3,9 +3,38 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:questions).dependent(:destroy) }
+  it { should have_many(:authorizations).dependent(:destroy) }
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
+
+  describe '.find_for_oauth' do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '1') }
+    let(:service) { double('FindForOauthService') }
+
+    it 'calls FindForOauthService' do
+      expect(FindForOauthService).to receive(:new).with(auth).and_return(service)
+      expect(service).to receive(:call)
+      User.find_for_oauth(auth)
+    end
+  end
+
+  describe '#create_authorization' do
+    let(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '1') }
+
+    it 'create new authorization for user' do
+      expect { user.create_authorization(auth) }.to change(user.authorizations, :count).by(1)
+    end
+
+    it 'create authorization with provider and uid' do
+      authorization = user.create_authorization(auth)
+
+      expect(authorization.provider).to eq auth.provider
+      expect(authorization.uid).to eq auth.uid
+    end
+  end
 
   describe '#author_of?' do
     let!(:author) { create(:user) }
