@@ -5,7 +5,7 @@ div.vote-block
 
   - if current_user.present?
     div.vote.mb-3
-      - if current_user.can_vote?(voteable)
+      - if can?(:like, voteable) || can?(:dislike, voteable)
 
         = link_to polymorphic_path(voteable, action: :like),
           method: :patch,
@@ -21,7 +21,7 @@ div.vote-block
           data: { type: 'json' } do
             i.bi.bi-hand-thumbs-down
 
-      - elsif current_user.can_revote?(voteable)
+      - elsif can?(:reset_vote, voteable)
 
         - if current_user.like?(voteable)
           div.btn.btn-success.like.me-2

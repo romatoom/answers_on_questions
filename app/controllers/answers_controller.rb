@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create show update]
   before_action :set_question, only: %i[create publish_answer]
   before_action :set_answer, only: %i[show update destroy mark_answer_as_best publish_answer]
+  authorize_resource
   after_action :publish_answer, only: %i[create]
 
   def show; end
@@ -17,21 +18,17 @@ class AnswersController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    if current_user&.author_of?(@answer)
-      @answer.update(answer_params_without_files)
-      @answer.files.attach(params[:answer][:files]) if params[:answer][:files].present?
-      delete_file_attachments(params[:answer][:file_list_for_delete])
-      @answer.reload
-    end
+    @answer.update(answer_params_without_files)
+    @answer.files.attach(params[:answer][:files]) if params[:answer][:files].present?
+    delete_file_attachments(params[:answer][:file_list_for_delete])
+    @answer.reload
   end
 
   def destroy
-    @answer.destroy if current_user&.author_of?(@answer)
+    @answer.destroy
   end
 
   def mark_answer_as_best
-    return head :forbidden if !current_user.author_of?(@answer.question)
-
     @top_answer = @answer.question.answers.sort_by_best.first
     @best_answer = @top_answer&.best ? @top_answer : nil
 

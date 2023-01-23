@@ -9,8 +9,10 @@
           = c.body
         div.comment-date
           'Created: #{c.formatted_creation_date}
+  - else
+    'No comments
 
-- if current_user.present?
+- if can?(:add_comment, resource)
   = form_with url: "#{polymorphic_url(resource)}/add_comment", method: :patch, local: false, class: "add_comment" do |f|
     div.comment-errors
 
