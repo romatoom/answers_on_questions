@@ -9,8 +9,10 @@ li id="question_#{question.id}"
     div.mb-3
       = render "shared/links", links: question.links, with_matching: false
 
-  - if current_user&.author_of?(question)
+  - if can?(:destroy, question)
     = button_to 'Remove', question_path(question), method: :delete, class: 'btn btn-danger remove_question_btn'
+
+  - if can?(:update, question)
     = link_to 'Edit', '#', class: 'btn btn-primary edit_question_btn', data: { resource_id: question.id }
 
     = render "questions/edit_question_form", question: question

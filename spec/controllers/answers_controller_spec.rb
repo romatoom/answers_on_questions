@@ -223,8 +223,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer2.reload.best).to be false
       end
 
-      it "responds with bad request status" do
-        expect(response.status).to be 403
+      it "redirect to new user session path" do
+        expect(response).to redirect_to new_user_session_path
       end
     end
 

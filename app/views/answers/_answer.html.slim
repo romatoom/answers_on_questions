@@ -14,14 +14,14 @@ li id="answer_#{answer.id}" class='answer' class=('best' if answer.best)
     div.mb-3
       = render "shared/links", links: answer.links, with_matching: true
 
-  - if current_user&.author_of?(answer)
+  - if can?(:destroy, answer)
     = button_to 'Remove', answer_path(answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
     = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
 
-  - if !answer.best && current_user&.author_of?(answer.question)
+  - if can?(:mark_answer_as_best, answer)
     = button_to 'Mark at best', mark_answer_as_best_answer_path(answer), remote: true, class: 'btn btn-success mark_best_answe mb-3'
 
-  - if current_user&.author_of?(answer)
+  - if can?(:update, answer)
     = form_with model: answer, method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
       div.answer-errors
         = render 'shared/errors', resource: answer

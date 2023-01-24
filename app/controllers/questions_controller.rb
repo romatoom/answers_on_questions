@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_question, only: %i[show destroy update delete_file_attachments publish_question]
+  authorize_resource
   after_action :publish_question, only: %i[create]
 
   def index
@@ -40,19 +41,15 @@ class QuestionsController < ApplicationController
   def update
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
 
-    if current_user&.author_of?(@question)
-      @question.update(question_params_without_files)
-      @question.files.attach(params[:question][:files]) if params[:question][:files].present?
-      delete_file_attachments(params[:question][:file_list_for_delete])
-      @question.reload
-    end
+    @question.update(question_params_without_files)
+    @question.files.attach(params[:question][:files]) if params[:question][:files].present?
+    delete_file_attachments(params[:question][:file_list_for_delete])
+    @question.reload
   end
 
   def destroy
-    if current_user&.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path, success: 'Question has been removed successfully.'
-    end
+    @question.destroy
+    redirect_to questions_path, success: 'Question has been removed successfully.'
   end
 
   private

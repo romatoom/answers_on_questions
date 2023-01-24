@@ -14,11 +14,6 @@ module Voted
   end
 
   def reset_vote
-    if !current_user.can_revote?(@voteable)
-      respond_to_json({ error: "You can not revote for #{controller_name.singularize}" }, :unprocessable_entity)
-      return
-    end
-
     @vote = @voteable.votes.find_by(user_id: current_user)
 
     response = nil
@@ -40,11 +35,6 @@ module Voted
   private
 
   def vote(value)
-    if !current_user.can_vote?(@voteable)
-      respond_to_json({ error: "You can not vote for #{controller_name.singularize}" }, :unprocessable_entity)
-      return
-    end
-
     @voteable.votes.new(user: current_user, value: value)
 
     response = nil

@@ -28,14 +28,6 @@ class User < ApplicationRecord
     record.respond_to?(:author) && record.author == self
   end
 
-  def can_vote?(voteable)
-    !author_of?(voteable) && votes.where(voteable: voteable).empty?
-  end
-
-  def can_revote?(voteable)
-    !author_of?(voteable) && votes.where(voteable: voteable).present?
-  end
-
   def like?(voteable)
     vote = votes.find_by(voteable: voteable)
     return if vote.nil?
