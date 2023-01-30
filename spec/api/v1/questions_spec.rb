@@ -105,8 +105,8 @@ describe 'Questions API', type: :request do
           expect(json['question']['list_of_links'].size).to eq 4
         end
 
-        it 'returns filename and url' do
-          %w[name url].each do |attr|
+        it 'returns id, name and url' do
+          %w[id name url].each do |attr|
             expect(json['question']['list_of_links'].first).to have_key(attr)
           end
         end
@@ -183,6 +183,85 @@ describe 'Questions API', type: :request do
 
         it 'returns errors' do
           expect(json['errors']).to eq ["Title can't be blank", "Body can't be blank"]
+        end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:id) { 123 }
+    let!(:question) { create(:question, id: id) }
+    let!(:links) { create_list(:link, 2, linkable: question) }
+
+    let(:api_path) { "/api/v1/questions/#{id}" }
+
+    let!(:links_attributes) do
+      [
+        { id: links.first.id, name: 'New Google link', url: 'http://google-new.com', _destroy: false },
+        { id: links.second.id, name: 'New VK link', url: 'http://vk-new.com', _destroy: false },
+      ]
+    end
+
+    let!(:params) do
+      {
+        title: 'Updated question title',
+        body: 'Updated question body',
+        links_attributes: links_attributes
+      }
+    end
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :patch }
+    end
+
+    context 'authorized' do
+      let!(:access_token) { create(:access_token) }
+
+      context 'when update success' do
+        before do
+          patch api_path,
+            params: {
+              question: params,
+              access_token: access_token.token
+            },
+            headers: headers
+        end
+
+        it 'returns successful status ( 200, 201...)' do
+          expect(response).to be_successful
+        end
+
+        describe 'returns patch question' do
+          it 'returns updated public fields' do
+            question.reload
+            %w[id title body created_at updated_at].each do |attr|
+              expect(json['question'][attr]).to eq question.send(attr).as_json
+            end
+          end
+
+          describe 'return updated links' do
+            it 'returns list of links' do
+              expect(json['question']['list_of_links'].size).to eq 2
+            end
+
+            it 'returns name and url for link' do
+              %w[id name url].each do |attr|
+                expect(json['question']['list_of_links'].first[attr]).to eq links_attributes.first[attr.to_sym]
+              end
+            end
+          end
+        end
+      end
+
+      context 'errors when update' do
+        before { patch api_path, params: { access_token: access_token.token, question: { title: nil } }, headers: headers }
+
+        it 'response with unprocessable entity status' do
+          expect(response.status).to eq 422
+        end
+
+        it 'returns error' do
+          expect(json['errors']).to eq ["Title can't be blank"]
         end
       end
     end

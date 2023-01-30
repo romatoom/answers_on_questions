@@ -161,5 +161,8 @@ RSpec.describe Ability, type: :model do
         end
       end
     end
+
+    # API V1
+    it { should be_able_to [:me, :others], :profile }
   end
 end

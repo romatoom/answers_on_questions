@@ -6,6 +6,6 @@ module ListOfLinks
   end
 
   def list_of_links
-    object.links.map { |f| { name: f.name, url: f.url } }
+    object.links.map { |l| { id: l.id, name: l.name, url: l.url } }
   end
 end
