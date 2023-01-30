@@ -231,7 +231,7 @@ describe 'Questions API', type: :request do
           expect(response).to be_successful
         end
 
-        describe 'returns patch question' do
+        describe 'returns updated question' do
           it 'returns updated public fields' do
             question.reload
             %w[id title body created_at updated_at].each do |attr|
@@ -262,6 +262,53 @@ describe 'Questions API', type: :request do
 
         it 'returns error' do
           expect(json['errors']).to eq ["Title can't be blank"]
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions/:id' do
+    let(:id) { 123 }
+    let!(:question) { create(:question, id: id) }
+
+    let(:api_path) { "/api/v1/questions/#{id}" }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :delete }
+    end
+
+    context 'authorized' do
+      let!(:access_token) { create(:access_token) }
+
+      context 'when delete success' do
+        describe 'check request' do
+          before do
+            delete api_path,
+              params: {
+                access_token: access_token.token
+              },
+              headers: headers
+          end
+
+          it 'returns successful status ( 200, 201...)' do
+            expect(response).to be_successful
+          end
+
+          it 'returns removed question' do
+            %w[id title body created_at updated_at].each do |attr|
+              expect(json['question'][attr]).to eq question.send(attr).as_json
+            end
+          end
+        end
+
+        it 'question has been removed' do
+          expect do
+            delete api_path,
+              params: {
+                access_token: access_token.token
+              },
+              headers: headers
+          end.to change { Question.count }.from(1).to(0)
         end
       end
     end

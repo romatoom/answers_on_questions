@@ -2,7 +2,7 @@ module Api
   module V1
     class QuestionsController < BaseController
       authorize_resource
-      before_action :set_question, only: [:show, :update]
+      before_action :set_question, only: [:show, :update, :destroy]
 
       def index
         @questions = Question.all
@@ -29,6 +29,11 @@ module Api
         else
           render_errors
         end
+      end
+
+      def destroy
+        @question.destroy
+        render json: @question, serializer: QuestionLiteSerializer
       end
 
       private
