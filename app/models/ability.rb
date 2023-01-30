@@ -49,6 +49,7 @@ class Ability
   end
 
   def api_v1_ability
-    can :me, :profile
+    can [:me, :others], :profile
+    can :create, Question
   end
 end

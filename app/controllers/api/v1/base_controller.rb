@@ -1,6 +1,7 @@
 module Api
   module V1
     class BaseController < ActionController::API
+      include ActiveStorage::SetCurrent
       include CanCan::ControllerAdditions
 
       before_action :doorkeeper_authorize!

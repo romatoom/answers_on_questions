@@ -39,13 +39,17 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
+  # API
   namespace :api do
     namespace :v1 do
       resources :profiles, only: [] do
         get :me, on: :collection
+        get :others, on: :collection
       end
 
-      resources :questions, only: [:index]
+      resources :questions, only: [:index, :show, :create], shallow: true do
+        resources :answers, only: [:index, :show]
+      end
     end
   end
 end
