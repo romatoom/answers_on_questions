@@ -198,7 +198,7 @@ describe 'Questions API', type: :request do
     let!(:links_attributes) do
       [
         { id: links.first.id, name: 'New Google link', url: 'http://google-new.com', _destroy: false },
-        { id: links.second.id, name: 'New VK link', url: 'http://vk-new.com', _destroy: false },
+        { id: links.second.id, name: 'New VK link', url: 'http://vk-new.com', _destroy: true },
       ]
     end
 
@@ -240,8 +240,8 @@ describe 'Questions API', type: :request do
           end
 
           describe 'return updated links' do
-            it 'returns list of links' do
-              expect(json['question']['list_of_links'].size).to eq 2
+            it 'returns list of links (second link has been removed)' do
+              expect(json['question']['list_of_links'].size).to eq 1
             end
 
             it 'returns name and url for link' do
