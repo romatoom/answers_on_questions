@@ -25,16 +25,11 @@ describe 'Profiles API', type: :request do
         expect(response).to be_successful
       end
 
-      it 'returns all public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
-          expect(json['user'][attr]).to eq me.send(attr).as_json
-        end
-      end
-
-      it 'does not returns private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(json['user']).to_not have_key(attr)
-        end
+      it_behaves_like 'API fields checkable' do
+        let(:existing_fields) { %w[id email admin created_at updated_at] }
+        let(:not_existing_fields) { %w[password encrypted_password] }
+        let(:expectable) { json['user'] }
+        let(:received) { me }
       end
     end
   end
@@ -63,16 +58,11 @@ describe 'Profiles API', type: :request do
         expect(json['users'].size).to eq 3
       end
 
-      it 'returns public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
-          expect(profile_reponse[attr]).to eq profile.send(attr).as_json
-        end
-      end
-
-      it 'does not returns private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(profile_reponse).to_not have_key(attr)
-        end
+      it_behaves_like 'API fields checkable' do
+        let(:existing_fields) { %w[id email admin created_at updated_at] }
+        let(:not_existing_fields) { %w[password encrypted_password] }
+        let(:expectable) { profile_reponse }
+        let(:received) { profile }
       end
     end
   end

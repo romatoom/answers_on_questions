@@ -30,10 +30,11 @@ describe 'Questions API', type: :request do
         expect(json['questions'].size).to eq 2
       end
 
-      it 'returns all public fields (without author_id)' do
-        %w[id title body created_at updated_at].each do |attr|
-          expect(question_reponse[attr]).to eq question.send(attr).as_json
-        end
+      it_behaves_like 'API fields checkable' do
+        let(:existing_fields) { %w[id title body created_at updated_at] }
+        let(:not_existing_fields) { %w[author_id] }
+        let(:expectable) { question_reponse }
+        let(:received) { question }
       end
 
       it 'contains user object' do
@@ -64,52 +65,26 @@ describe 'Questions API', type: :request do
         expect(response).to be_successful
       end
 
-      it 'returns all public fields' do
-        %w[id title body created_at updated_at].each do |attr|
-          expect(json['question'][attr]).to eq question.send(attr).as_json
-        end
+      it_behaves_like 'API fields checkable' do
+        let(:existing_fields) { %w[id title body created_at updated_at] }
+        let(:not_existing_fields) { [] }
+        let(:expectable) { json['question'] }
+        let(:received) { question }
       end
 
-      describe 'comments' do
-        it 'returns list of comments' do
-          expect(json['question']['comments'].size).to eq 3
-        end
-
-        it 'returns fields for comment' do
-          %w[id body created_at updated_at].each do |attr|
-            expect(json['question']['comments'].first[attr]).to eq question.comments.first.send(attr).as_json
-          end
-        end
-
-        it 'contains author of comment (user object)' do
-          %w[id email admin created_at updated_at].each do |attr|
-            expect(json['question']['comments'].first['author'][attr]).to eq question.comments.first.author.send(attr).as_json
-          end
-        end
+      it_behaves_like 'API commentable' do
+        let(:expecteable) { json['question']['comments'] }
+        let(:received) { question.comments }
       end
 
-      describe 'files' do
-        it 'contains list of attached files' do
-          expect(json['question']['list_of_files'].size).to eq 3
-        end
-
-        it 'returns filename and url' do
-          %w[name url].each do |attr|
-            expect(json['question']['list_of_files'].first).to have_key(attr)
-          end
-        end
+      it_behaves_like 'API fileable' do
+        let(:expecteable) { json['question']['list_of_files'] }
+        let(:list_length) { 3 }
       end
 
-      describe 'links' do
-        it 'contains list of attached files' do
-          expect(json['question']['list_of_links'].size).to eq 4
-        end
-
-        it 'returns id, name and url' do
-          %w[id name url].each do |attr|
-            expect(json['question']['list_of_links'].first).to have_key(attr)
-          end
-        end
+      it_behaves_like 'API linkeable' do
+        let(:expecteable) { json['question']['list_of_links'] }
+        let(:list_length) { 4 }
       end
     end
   end
@@ -153,24 +128,11 @@ describe 'Questions API', type: :request do
           expect(response).to be_successful
         end
 
-        describe 'returns created question' do
-          it 'returns public fields' do
-            %w[id title body created_at].each do |attr|
-              expect(json['question']).to have_key(attr)
-            end
-          end
-
-          describe 'return links' do
-            it 'returns list of links' do
-              expect(json['question']['list_of_links'].size).to eq 2
-            end
-
-            it 'returns name and url for link' do
-              %w[name url].each do |attr|
-                expect(json['question']['list_of_links'].first[attr]).to eq links_attributes.first[attr.to_sym]
-              end
-            end
-          end
+        it_behaves_like 'API create/update linkeable' do
+          let(:expectable) { json['question'] }
+          let(:received) { Question.last }
+          let(:count_of_links) { 2 }
+          let(:fields) { %w[id title body created_at updated_at] }
         end
       end
 
@@ -231,25 +193,11 @@ describe 'Questions API', type: :request do
           expect(response).to be_successful
         end
 
-        describe 'returns updated question' do
-          it 'returns updated public fields' do
-            question.reload
-            %w[id title body created_at updated_at].each do |attr|
-              expect(json['question'][attr]).to eq question.send(attr).as_json
-            end
-          end
-
-          describe 'return updated links' do
-            it 'returns list of links (second link has been removed)' do
-              expect(json['question']['list_of_links'].size).to eq 1
-            end
-
-            it 'returns name and url for link' do
-              %w[id name url].each do |attr|
-                expect(json['question']['list_of_links'].first[attr]).to eq links_attributes.first[attr.to_sym]
-              end
-            end
-          end
+        it_behaves_like 'API create/update linkeable' do
+          let(:expectable) { json['question'] }
+          let(:received) { question.reload }
+          let(:count_of_links) { 1 }
+          let(:fields) { %w[id title body created_at updated_at] }
         end
       end
 
