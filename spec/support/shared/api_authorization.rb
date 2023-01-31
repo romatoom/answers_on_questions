@@ -6,8 +6,8 @@ shared_examples_for 'API Authorizable' do
     end
 
     it 'returns 401 status if access_token is invalid' do
-      params = {} if !params
-      do_request(method, api_path, params: { access_token: 'invalid_access_token' }.merge(params), headers: headers)
+      params = {} if params.blank?
+      do_request(method, api_path, params: params.merge(access_token: 'invalid_access_token'), headers: headers)
       expect(response.status).to eq 401
     end
   end
