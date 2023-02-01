@@ -40,9 +40,15 @@ class Ability
     can :mark_answer_as_best, Answer do |answer|
       !answer.best && user.author_of?(answer.question)
     end
+
+    api_v1_ability
   end
 
   def admin_ability
     can :manage, :all
+  end
+
+  def api_v1_ability
+    can [:me, :others], :profile
   end
 end

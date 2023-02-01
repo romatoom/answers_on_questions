@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+
   root to: 'questions#index'
 
   concern :voteable do
@@ -36,4 +38,18 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
+
+  # API
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        get :me, on: :collection
+        get :others, on: :collection
+      end
+
+      resources :questions, only: [:index, :show, :create, :update, :destroy], shallow: true do
+        resources :answers, only: [:index, :show, :create, :update, :destroy]
+      end
+    end
+  end
 end
