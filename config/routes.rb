@@ -27,6 +27,8 @@ Rails.application.routes.draw do
 
   resources :questions, only: %i[new create update show index destroy], concerns: [:voteable, :commenteable], shallow: true do
     delete :delete_file_attachment, on: :member
+    post :subscribe_new_answers, on: :member
+    post :unsubscribe_new_answers, on: :member
 
     resources :answers, only: %i[create update show destroy], concerns: [:voteable, :commenteable] do
       post :mark_answer_as_best, on: :member

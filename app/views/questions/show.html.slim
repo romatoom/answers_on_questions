@@ -26,6 +26,11 @@ div.question.mb-5
       div= @question.reward.title
       = image_tag url_for(@question.reward.image), class: "best-answer-reward"
 
+  - if can?(:subscribe_new_answers, @question)
+    = button_to 'Watch for new answers', subscribe_new_answers_question_path(@question), method: :post, remote: true, class: 'btn btn-success mb-3'
+  - elsif can?(:unsubscribe_new_answers, @question)
+    = button_to 'Unwatch for new answers', unsubscribe_new_answers_question_path(@question), method: :post, remote: true, class: 'btn btn-danger mb-3'
+
   = render 'shared/comments', resource: @question
 
 div.mb-5

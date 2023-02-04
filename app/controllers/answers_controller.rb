@@ -82,6 +82,6 @@ class AnswersController < ApplicationController
   end
 
   def send_notifies
-    NewAnswerJob.perform_now(@question)
+    NewAnswerJob.perform_later(@question)
   end
 end

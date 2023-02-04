@@ -3,8 +3,14 @@ class QuestionsController < ApplicationController
   include Commented
 
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show destroy update delete_file_attachments publish_question]
+
+  before_action :set_question, only: %i[
+    show destroy update delete_file_attachments publish_question
+    subscribe_new_answers unsubscribe_new_answers
+  ]
+
   authorize_resource
+
   after_action :publish_question, only: %i[create]
 
   def index
@@ -50,6 +56,16 @@ class QuestionsController < ApplicationController
   def destroy
     @question.destroy
     redirect_to questions_path, success: 'Question has been removed successfully.'
+  end
+
+  def subscribe_new_answers
+    SubscriptionService.new.create_subscription_for_user(user: current_user, subscription_slug: "new_answer", question: @question)
+    redirect_to question_path(@question), success: 'You have subscribed to be notified of new answers.'
+  end
+
+  def unsubscribe_new_answers
+    SubscriptionService.new.remove_subscription_for_user(user: current_user, subscription_slug: "new_answer", question: @question)
+    redirect_to question_path(@question), success: 'You have unsubscribed to be notified of new answers.'
   end
 
   private

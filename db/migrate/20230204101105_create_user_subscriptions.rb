@@ -4,7 +4,6 @@ class CreateUserSubscriptions < ActiveRecord::Migration[6.1]
       t.references :user, null: false, foreign_key: true
       t.references :subscription, null: false, foreign_key: true
       t.references :question, null: false, foreign_key: true
-      t.boolean :active, default: false
 
       t.timestamps
     end

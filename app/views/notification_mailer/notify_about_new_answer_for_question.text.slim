@@ -1,4 +1,7 @@
-'Your question received a new answer.
+- if @user.author_of?(@question)
+  'Your question received a new answer.
+- else
+  'Question received a new answer.
 
 'Question:
 = @question.title

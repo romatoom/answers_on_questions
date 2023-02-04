@@ -44,4 +44,9 @@ class User < ApplicationRecord
 
     !like
   end
+
+  def subscription_by_slug(subscription_slug, question)
+    subscription = Subscription.find_by(slug: subscription_slug)
+    users_subscriptions.where(subscription_id: subscription.id, question_id: question.id).first
+  end
 end

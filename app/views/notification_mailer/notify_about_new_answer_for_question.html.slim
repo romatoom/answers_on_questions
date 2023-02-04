@@ -1,4 +1,8 @@
-h1 Your question received a new answer.
+- if @user.author_of?(@question)
+  h1 Your question received a new answer.
+- else
+  h1 Question received a new answer.
+
 h2 Question:
 p
   = @question.title

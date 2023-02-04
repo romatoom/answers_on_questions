@@ -181,7 +181,6 @@ ActiveRecord::Schema.define(version: 2023_02_04_101105) do
     t.bigint "user_id", null: false
     t.bigint "subscription_id", null: false
     t.bigint "question_id", null: false
-    t.boolean "active", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_id"], name: "index_users_subscriptions_on_question_id"
