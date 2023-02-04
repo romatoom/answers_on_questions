@@ -7,14 +7,13 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[show update destroy mark_answer_as_best publish_answer]
   authorize_resource
   after_action :publish_answer, only: %i[create]
+  after_action :send_notifies, only: %i[create]
 
   def show; end
 
   def create
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
-    @answer = @question.answers.new(answer_params.merge(author: current_user))
-    SubscriptionService.new.question_got_new_answer(@question) if @answer.save
-    @answer
+    @answer = @question.answers.create!(answer_params.merge(author: current_user))
   end
 
   def update
@@ -80,5 +79,9 @@ class AnswersController < ApplicationController
       answer: @answer.attributes.merge(files:, links:, votes:),
       sid: session.id.public_id
     })
+  end
+
+  def send_notifies
+    NewAnswerJob.perform_now(@question)
   end
 end
