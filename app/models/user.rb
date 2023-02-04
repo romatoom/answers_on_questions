@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :votes
   has_many :authorizations, dependent: :destroy
 
+  has_many :users_subscriptions, dependent: :destroy
+  has_many :subscriptions, through: :users_subscriptions
+
   def self.find_for_oauth(auth)
     FindForOauthService.new(auth).call
   end

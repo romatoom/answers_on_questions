@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_24_095035) do
+ActiveRecord::Schema.define(version: 2023_02_04_101105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,17 +156,37 @@ ActiveRecord::Schema.define(version: 2023_01_24_095035) do
     t.index ["user_id"], name: "index_rewards_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_subscriptions_on_slug", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: 6
-    t.datetime "remember_created_at", precision: 6
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.boolean "admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "users_subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "subscription_id", null: false
+    t.bigint "question_id", null: false
+    t.boolean "active", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_users_subscriptions_on_question_id"
+    t.index ["subscription_id"], name: "index_users_subscriptions_on_subscription_id"
+    t.index ["user_id"], name: "index_users_subscriptions_on_user_id"
   end
 
   create_table "votes", force: :cascade do |t|
@@ -190,5 +210,8 @@ ActiveRecord::Schema.define(version: 2023_01_24_095035) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "questions", "users", column: "author_id"
   add_foreign_key "rewards", "questions"
+  add_foreign_key "users_subscriptions", "questions"
+  add_foreign_key "users_subscriptions", "subscriptions"
+  add_foreign_key "users_subscriptions", "users"
   add_foreign_key "votes", "users"
 end

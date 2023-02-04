@@ -1,0 +1,9 @@
+h1 Your question received a new answer.
+h2 Question:
+p
+  = @question.title
+h2 Answer:
+p
+  = @new_answer.body
+p
+  = link_to "Open", answer_url(@new_answer)
