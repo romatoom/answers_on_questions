@@ -8,15 +8,25 @@ class SubscriptionService
 
   def remove_subscription_for_user(user:, subscription_slug:, question:)
     user_subscription = user.subscription_by_slug(subscription_slug, question)
-    user_subscription.destroy!
+    user_subscription.destroy! if user_subscription.present?
   end
 
   def question_got_new_answer(question)
-    subscription = Subscription.find_by(slug: "new_answer")
-    users_subscription = UsersSubscription.where(subscription_id: subscription.id, question_id: question.id)
+    send_notify("new_answer", question, :notify_about_new_answer_for_question)
+  end
 
-    users_subscription.find_each do |user_subscription|
-      NotificationMailer.notify_about_new_answer_for_question(user_subscription.user, user_subscription.question).deliver_later
+  def question_has_been_changed(question)
+    send_notify("change_question", question, :notify_about_change_question)
+  end
+
+  private
+
+  def send_notify(subscription_slug, question, method)
+    subscription = Subscription.find_by(slug: subscription_slug)
+    users_subscriptions = UsersSubscription.where(subscription_id: subscription.id, question_id: question.id)
+
+    users_subscriptions.find_each do |user_subscription|
+      NotificationMailer.send(method, user_subscription.user, user_subscription.question).deliver_later
     end
   end
 end

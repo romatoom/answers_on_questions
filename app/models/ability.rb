@@ -49,6 +49,14 @@ class Ability
       user.subscription_by_slug("new_answer", question).present?
     end
 
+    can :subscribe_change_question, Question do |question|
+      user.subscription_by_slug("change_question", question).blank?
+    end
+
+    can :unsubscribe_change_question, Question do |question|
+      user.subscription_by_slug("change_question", question).present?
+    end
+
     api_v1_ability
   end
 

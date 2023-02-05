@@ -6,4 +6,11 @@ class NotificationMailer < ApplicationMailer
 
     mail to: user.email, subject: 'New answer'
   end
+
+  def notify_about_change_question(user, question)
+    @question = question
+    @user = user
+
+    mail to: user.email, subject: 'Question changed'
+  end
 end

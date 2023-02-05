@@ -7,11 +7,13 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: %i[
     show destroy update delete_file_attachments publish_question
     subscribe_new_answers unsubscribe_new_answers
+    subscribe_change_question unsubscribe_change_question
   ]
 
   authorize_resource
 
   after_action :publish_question, only: %i[create]
+  after_action :send_notifies, only: %i[update]
 
   def index
     @questions = Question.order(:id)
@@ -68,6 +70,16 @@ class QuestionsController < ApplicationController
     redirect_to question_path(@question), success: 'You have unsubscribed to be notified of new answers.'
   end
 
+  def subscribe_change_question
+    SubscriptionService.new.create_subscription_for_user(user: current_user, subscription_slug: "change_question", question: @question)
+    redirect_to question_path(@question), success: 'You have subscribed to be notified of update question.'
+  end
+
+  def unsubscribe_change_question
+    SubscriptionService.new.remove_subscription_for_user(user: current_user, subscription_slug: "change_question", question: @question)
+    redirect_to question_path(@question), success: 'You have unsubscribed to be notified of update question.'
+  end
+
   private
 
   def question_params
@@ -104,5 +116,9 @@ class QuestionsController < ApplicationController
     ActionCable.server.broadcast('questions_channel', {
       question: @question.attributes.merge(files: files, links: links, url: url_for(@question))
     })
+  end
+
+  def send_notifies
+    UpdateQuestionJob.perform_later(@question)
   end
 end

@@ -29,6 +29,8 @@ Rails.application.routes.draw do
     delete :delete_file_attachment, on: :member
     post :subscribe_new_answers, on: :member
     post :unsubscribe_new_answers, on: :member
+    post :subscribe_change_question, on: :member
+    post :unsubscribe_change_question, on: :member
 
     resources :answers, only: %i[create update show destroy], concerns: [:voteable, :commenteable] do
       post :mark_answer_as_best, on: :member
