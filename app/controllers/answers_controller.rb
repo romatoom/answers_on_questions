@@ -3,7 +3,7 @@ class AnswersController < ApplicationController
   include Commented
 
   before_action :authenticate_user!, except: %i[new create show update]
-  before_action :set_question, only: %i[create publish_answer]
+  before_action :set_question, only: %i[create publish_answer send_notifies]
   before_action :set_answer, only: %i[show update destroy mark_answer_as_best publish_answer]
   authorize_resource
   after_action :publish_answer, only: %i[create]
@@ -13,7 +13,7 @@ class AnswersController < ApplicationController
 
   def create
     redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated') unless user_signed_in?
-    @answer = @question.answers.create!(answer_params.merge(author: current_user))
+    @answer = @question.answers.create(answer_params.merge(author: current_user))
   end
 
   def update

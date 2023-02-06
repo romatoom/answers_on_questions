@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
   before_action :set_question, only: %i[
-    show destroy update delete_file_attachments publish_question
+    show destroy update delete_file_attachments publish_question send_notifies
     subscribe_new_answers unsubscribe_new_answers
     subscribe_change_question unsubscribe_change_question
   ]
