@@ -8,6 +8,7 @@ feature 'User can subscribe to notifications', %q(
   include ActiveJob::TestHelper
 
   given!(:user) { create(:user) }
+  given!(:other_user) { create(:user) }
   given!(:question) { create(:question, author: user) }
 
   describe 'Authenticated user' do
@@ -49,8 +50,11 @@ feature 'User can subscribe to notifications', %q(
         end
       end
 
-      context 'when user have subscribe' do
-        background { create(:users_subscription, user: user, subscription: subscription, question: question) }
+      context 'when users have subscribe' do
+        background do
+          create(:users_subscription, user: user, subscription: subscription, question: question)
+          create(:users_subscription, user: other_user, subscription: subscription, question: question)
+        end
 
         scenario 'can unsubscribed', js: true do
           visit question_path(question)
@@ -79,7 +83,12 @@ feature 'User can subscribe to notifications', %q(
           # for Mailers
           perform_enqueued_jobs
 
+          expect(all_emails.count).to be 2
+
           open_email(user.email)
+          expect(current_email.subject).to eq 'New answer'
+
+          open_email(other_user.email)
           expect(current_email.subject).to eq 'New answer'
         end
       end
