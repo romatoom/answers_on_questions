@@ -171,10 +171,10 @@ feature 'User can subscribe to notifications', %q(
           expect(all_emails.count).to be 2
 
           open_email(user.email)
-          expect(current_email.subject).to eq 'Update question'
+          expect(current_email.subject).to eq 'Question changed'
 
           open_email(other_user.email)
-          expect(current_email.subject).to eq 'Update question'
+          expect(current_email.subject).to eq 'Question changed'
         end
       end
     end
