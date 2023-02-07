@@ -221,6 +221,38 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'actions for new_answer subscription' do
+    let!(:subscription) { create(:subscription, :new_answer) }
+
+    describe 'POST #subscribe_new_answers' do
+      it_behaves_like 'subscriptionable' do
+        let!(:action) { :subscribe_new_answers }
+      end
+    end
+
+    describe 'POST #unsubscribe_new_answers' do
+      it_behaves_like 'unsubscriptionable' do
+        let!(:action) { :unsubscribe_new_answers }
+      end
+    end
+  end
+
+  describe 'actions for change_question subscription' do
+    let!(:subscription) { create(:subscription, :change_question) }
+
+    describe 'POST #subscribe_change_question' do
+      it_behaves_like 'subscriptionable' do
+        let!(:action) { :subscribe_change_question }
+      end
+    end
+
+    describe 'POST #unsubscribe_change_question' do
+      it_behaves_like 'unsubscriptionable' do
+        let!(:action) { :unsubscribe_change_question }
+      end
+    end
+  end
+
   it_behaves_like 'voted'
   it_behaves_like 'commented'
 end
