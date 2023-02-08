@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
 
   describe 'GET #new' do
     context 'with authenticated user' do
@@ -32,25 +32,80 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:question) { create(:question) }
-    let(:answers) { create_list(:answer)}
+    let!(:question) { create(:question) }
 
-    before { get :show, params: { id: question.id } }
+    context 'when any user' do
+      before { get :show, params: { id: question.id } }
 
-    it 'assigns a requested question to @question' do
-      expect(assigns(:question)).to eq question
+      it 'assigns a requested question to @question' do
+        expect(assigns(:question)).to eq question
+      end
+
+      it 'assigns a new answer for question' do
+        expect(assigns(:answer)).to be_a_new(Answer)
+      end
+
+      it 'assigns a new link for answer' do
+        expect(assigns(:answer).links.first).to be_a_new(Link)
+      end
+
+      it 'renders show view' do
+        expect(response).to render_template :show
+      end
     end
 
-    it 'assigns a new answer for question' do
-      expect(assigns(:answer)).to be_a_new(Answer)
+    context 'when authorized user' do
+      before { login(user) }
+
+      context 'when user have subscribtion "change_question"' do
+        let!(:subscription) { create(:subscription, :change_question) }
+        let!(:user_subscription) { create(:users_subscription, question: question, user: user, subscription: subscription) }
+
+        before { get :show, params: { id: question.id } }
+
+        it 'assigns existing subscribtion' do
+          expect(assigns(:user_subscription_change_question)).to eq user_subscription
+        end
+      end
+
+      context 'when user have not subscribtion "change_question"' do
+        before { get :show, params: { id: question.id } }
+
+        it 'assigns existing subscribtion' do
+          expect(assigns(:user_subscription_change_question)).to be_a_new(UsersSubscription)
+        end
+      end
+
+      context 'when user have subscribtion "new_answer"' do
+        let!(:subscription) { create(:subscription, :new_answer) }
+        let!(:user_subscription) { create(:users_subscription, question: question, user: user, subscription: subscription) }
+
+        before { get :show, params: { id: question.id } }
+
+        it 'assigns existing subscribtion' do
+          expect(assigns(:user_subscription_new_answer)).to eq user_subscription
+        end
+      end
+
+      context 'when user have not subscribtion "new_answer"' do
+        before { get :show, params: { id: question.id } }
+
+        it 'assigns existing subscribtion' do
+          expect(assigns(:user_subscription_new_answer)).to be_a_new(UsersSubscription)
+        end
+      end
     end
 
-    it 'assigns a new link for answer' do
-      expect(assigns(:answer).links.first).to be_a_new(Link)
-    end
+    context 'when not authorized user' do
+      before { get :show, params: { id: question.id } }
 
-    it 'renders show view' do
-      expect(response).to render_template :show
+      it 'assigns user_subscription_change_question is nil' do
+        expect(assigns(:user_subscription_change_question)).to be_a_new(UsersSubscription)
+      end
+
+      it 'assigns user_subscription_new_answer is nil' do
+        expect(assigns(:user_subscription_new_answer)).to be_a_new(UsersSubscription)
+      end
     end
   end
 
@@ -218,38 +273,6 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'with unauthenticated user' do
       expect { delete_question }.to_not change(Question, :count)
-    end
-  end
-
-  describe 'actions for new_answer subscription' do
-    let!(:subscription) { create(:subscription, :new_answer) }
-
-    describe 'POST #subscribe_new_answers' do
-      it_behaves_like 'subscriptionable' do
-        let!(:action) { :subscribe_new_answers }
-      end
-    end
-
-    describe 'POST #unsubscribe_new_answers' do
-      it_behaves_like 'unsubscriptionable' do
-        let!(:action) { :unsubscribe_new_answers }
-      end
-    end
-  end
-
-  describe 'actions for change_question subscription' do
-    let!(:subscription) { create(:subscription, :change_question) }
-
-    describe 'POST #subscribe_change_question' do
-      it_behaves_like 'subscriptionable' do
-        let!(:action) { :subscribe_change_question }
-      end
-    end
-
-    describe 'POST #unsubscribe_change_question' do
-      it_behaves_like 'unsubscriptionable' do
-        let!(:action) { :unsubscribe_change_question }
-      end
     end
   end
 

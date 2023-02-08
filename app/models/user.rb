@@ -47,6 +47,8 @@ class User < ApplicationRecord
 
   def subscription_by_slug(subscription_slug, question)
     subscription = Subscription.find_by(slug: subscription_slug)
-    users_subscriptions.where(subscription: subscription, question: question).first
+    return nil if subscription.nil?
+    
+    users_subscriptions.where(subscription_id: subscription.id, question_id: question.id).first
   end
 end

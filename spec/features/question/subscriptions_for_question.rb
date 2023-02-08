@@ -26,7 +26,7 @@ feature 'User can subscribe to notifications', %q(
           click_on 'Watch for new answers'
 
           within '.alerts' do
-            expect(page).to have_content 'You have subscribed to be notified of new answers.'
+            expect(page).to have_content "You have subscribed to be '#{subscription.title}' subscription."
           end
         end
 
@@ -63,7 +63,7 @@ feature 'User can subscribe to notifications', %q(
           click_on 'Unwatch for new answers'
 
           within '.alerts' do
-            expect(page).to have_content 'You have unsubscribed to be notified of new answers.'
+            expect(page).to have_content "You have unsubscribed to be '#{subscription.title}' subscription."
           end
         end
 
@@ -105,7 +105,7 @@ feature 'User can subscribe to notifications', %q(
           click_on 'Watch for update question'
 
           within '.alerts' do
-            expect(page).to have_content 'You have subscribed to be notified of update question.'
+            expect(page).to have_content "You have subscribed to be '#{subscription.title}' subscription."
           end
         end
 
@@ -145,7 +145,7 @@ feature 'User can subscribe to notifications', %q(
           click_on 'Unwatch for update question'
 
           within '.alerts' do
-            expect(page).to have_content 'You have unsubscribed to be notified of update question.'
+            expect(page).to have_content "You have unsubscribed to be '#{subscription.title}' subscription."
           end
         end
 

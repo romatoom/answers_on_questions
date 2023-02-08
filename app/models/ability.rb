@@ -41,20 +41,12 @@ class Ability
       !answer.best && user.author_of?(answer.question)
     end
 
-    can :subscribe_new_answers, Question do |question|
-      user.subscription_by_slug("new_answer", question).blank?
+    can :subscribe, UsersSubscription do |user_subscription|
+      user_subscription.new_record?
     end
 
-    can :unsubscribe_new_answers, Question do |question|
-      user.subscription_by_slug("new_answer", question).present?
-    end
-
-    can :subscribe_change_question, Question do |question|
-      user.subscription_by_slug("change_question", question).blank?
-    end
-
-    can :unsubscribe_change_question, Question do |question|
-      user.subscription_by_slug("change_question", question).present?
+    can :unsubscribe, UsersSubscription do |user_subscription|
+      user_subscription.persisted?
     end
 
     api_v1_ability

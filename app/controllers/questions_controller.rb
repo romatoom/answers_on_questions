@@ -6,8 +6,6 @@ class QuestionsController < ApplicationController
 
   before_action :set_question, only: %i[
     show destroy update delete_file_attachments publish_question send_notifies
-    subscribe_new_answers unsubscribe_new_answers
-    subscribe_change_question unsubscribe_change_question
   ]
 
   authorize_resource
@@ -29,6 +27,9 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.new
     @answers = @question.answers.sort_by_best
+
+    @user_subscription_new_answer = current_user&.subscription_by_slug("new_answer", @question) || UsersSubscription.new
+    @user_subscription_change_question = current_user&.subscription_by_slug("change_question", @question) || UsersSubscription.new
 
     gon.push({
       :sid => session&.id&.public_id,
@@ -58,26 +59,6 @@ class QuestionsController < ApplicationController
   def destroy
     @question.destroy
     redirect_to questions_path, success: 'Question has been removed successfully.'
-  end
-
-  def subscribe_new_answers
-    SubscriptionService.new.create_subscription_for_user(user: current_user, subscription_slug: "new_answer", question: @question)
-    redirect_to question_path(@question), success: 'You have subscribed to be notified of new answers.'
-  end
-
-  def unsubscribe_new_answers
-    SubscriptionService.new.remove_subscription_for_user(user: current_user, subscription_slug: "new_answer", question: @question)
-    redirect_to question_path(@question), success: 'You have unsubscribed to be notified of new answers.'
-  end
-
-  def subscribe_change_question
-    SubscriptionService.new.create_subscription_for_user(user: current_user, subscription_slug: "change_question", question: @question)
-    redirect_to question_path(@question), success: 'You have subscribed to be notified of update question.'
-  end
-
-  def unsubscribe_change_question
-    SubscriptionService.new.remove_subscription_for_user(user: current_user, subscription_slug: "change_question", question: @question)
-    redirect_to question_path(@question), success: 'You have unsubscribed to be notified of update question.'
   end
 
   private

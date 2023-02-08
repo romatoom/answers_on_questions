@@ -37,6 +37,11 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :users_subscriptions, only: %i[] do
+    post :subscribe
+    post :unsubscribe
+  end
+
   resources :confirmed_emails, only: %i[new create] do
     collection do
       get :confirm

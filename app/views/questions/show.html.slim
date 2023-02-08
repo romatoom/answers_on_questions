@@ -26,20 +26,20 @@ div.question.mb-5
       div= @question.reward.title
       = image_tag url_for(@question.reward.image), class: "best-answer-reward"
 
-  - if can?(:subscribe_change_question, @question)
-    = button_to 'Watch for update question', subscribe_change_question_question_path(@question), method: :post, remote: true, class: 'btn btn-success mb-3'
-  - elsif can?(:unsubscribe_change_question, @question)
-    = button_to 'Unwatch for update question', unsubscribe_change_question_question_path(@question), method: :post, remote: true, class: 'btn btn-danger mb-3'
+  - if can?(:subscribe, @user_subscription_change_question)
+    = button_to 'Watch for update question', users_subscriptions_subscribe_path(question_id: @question.id, subscription_slug: "change_question"), method: :post, remote: true, class: 'btn btn-success mb-3'
+  - elsif can?(:unsubscribe, @user_subscription_change_question)
+    = button_to 'Unwatch for update question', users_subscriptions_unsubscribe_path(question_id: @question.id, subscription_slug: "change_question"), method: :post, remote: true, class: 'btn btn-danger mb-3'
 
   = render 'shared/comments', resource: @question
 
 div.mb-5
   div.mb-2.fw-bold Answers
 
-  - if can?(:subscribe_new_answers, @question)
-    = button_to 'Watch for new answers', subscribe_new_answers_question_path(@question), method: :post, remote: true, class: 'btn btn-success mb-3'
-  - elsif can?(:unsubscribe_new_answers, @question)
-    = button_to 'Unwatch for new answers', unsubscribe_new_answers_question_path(@question), method: :post, remote: true, class: 'btn btn-danger mb-3'
+  - if can?(:subscribe, @user_subscription_new_answer)
+    = button_to 'Watch for new answers', users_subscriptions_subscribe_path(question_id: @question.id, subscription_slug: "new_answer"), method: :post, remote: true, class: 'btn btn-success mb-3'
+  - elsif can?(:unsubscribe, @user_subscription_new_answer)
+    = button_to 'Unwatch for new answers', users_subscriptions_unsubscribe_path(question_id: @question.id, subscription_slug: "new_answer"), method: :post, remote: true, class: 'btn btn-danger mb-3'
 
   ul.answers.mb-3
     - if @answers.present?

@@ -8,10 +8,9 @@ class CreateUserSubscriptions < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
+    subscription = Subscription.find_by(slug: "new_answer")
     Question.find_each do |question|
-      SubscriptionService.new.create_subscription_for_user(
-        user: question.author, subscription_slug: "new_answer", question: question
-      )
+      question.author.users_subscriptions.create!(subscription_id: subscription.id, question_id: question.id)
     end
   end
 
