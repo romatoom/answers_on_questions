@@ -1,3 +1,5 @@
+require 'date'
+
 class Question < ApplicationRecord
   include Voteable
   include Commenteable
@@ -13,4 +15,6 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
   validates :title, uniqueness: true
+
+  scope :created_in_the_last_day, -> { where(created_at: 1.day.ago..Time.current) }
 end

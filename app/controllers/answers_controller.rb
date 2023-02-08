@@ -3,10 +3,11 @@ class AnswersController < ApplicationController
   include Commented
 
   before_action :authenticate_user!, except: %i[new create show update]
-  before_action :set_question, only: %i[create publish_answer]
+  before_action :set_question, only: %i[create publish_answer send_notifies]
   before_action :set_answer, only: %i[show update destroy mark_answer_as_best publish_answer]
   authorize_resource
   after_action :publish_answer, only: %i[create]
+  after_action :send_notifies, only: %i[create]
 
   def show; end
 
@@ -78,5 +79,9 @@ class AnswersController < ApplicationController
       answer: @answer.attributes.merge(files:, links:, votes:),
       sid: session.id.public_id
     })
+  end
+
+  def send_notifies
+    NewAnswerJob.perform_later(@question)
   end
 end

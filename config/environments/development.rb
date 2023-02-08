@@ -82,4 +82,6 @@ Rails.application.configure do
   # The bot domain setting does not support the localhost value, so the work was done through ngrok.
   # The following is required for the application to work:
   config.hosts << "3504-15-161-81-7.eu.ngrok.io"
+
+  config.active_job.queue_adapter = :sidekiq
 end

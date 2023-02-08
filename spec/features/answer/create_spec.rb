@@ -17,6 +17,7 @@ feature 'User can write an answer', %q(
 
     scenario 'can write an answer', js: true do
       fill_in 'You can answer the question here', with: 'Text text text'
+
       click_on 'Answer'
 
       expect(current_path).to eq question_path(question)

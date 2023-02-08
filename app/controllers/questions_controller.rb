@@ -3,9 +3,15 @@ class QuestionsController < ApplicationController
   include Commented
 
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show destroy update delete_file_attachments publish_question]
+
+  before_action :set_question, only: %i[
+    show destroy update delete_file_attachments publish_question send_notifies
+  ]
+
   authorize_resource
+
   after_action :publish_question, only: %i[create]
+  after_action :send_notifies, only: %i[update]
 
   def index
     @questions = Question.order(:id)
@@ -21,6 +27,9 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.new
     @answers = @question.answers.sort_by_best
+
+    @user_subscription_new_answer = current_user&.subscription_by_slug("new_answer", @question) || UsersSubscription.new
+    @user_subscription_change_question = current_user&.subscription_by_slug("change_question", @question) || UsersSubscription.new
 
     gon.push({
       :sid => session&.id&.public_id,
@@ -88,5 +97,9 @@ class QuestionsController < ApplicationController
     ActionCable.server.broadcast('questions_channel', {
       question: @question.attributes.merge(files: files, links: links, url: url_for(@question))
     })
+  end
+
+  def send_notifies
+    UpdateQuestionJob.perform_later(@question)
   end
 end

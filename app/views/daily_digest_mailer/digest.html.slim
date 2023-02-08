@@ -1,0 +1,8 @@
+h1 Questions created in the last day.
+
+- if @questions.present?
+  - @questions.each do |question|
+    li
+      = link_to question.title, question_url(question)
+- else
+  p No new questions were created in the last day.

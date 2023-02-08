@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :votes
   has_many :authorizations, dependent: :destroy
 
+  has_many :users_subscriptions, dependent: :destroy
+  has_many :subscriptions, through: :users_subscriptions
+
   def self.find_for_oauth(auth)
     FindForOauthService.new(auth).call
   end
@@ -40,5 +43,12 @@ class User < ApplicationRecord
     return if like.nil?
 
     !like
+  end
+
+  def subscription_by_slug(subscription_slug, question)
+    subscription = Subscription.find_by(slug: subscription_slug)
+    return nil if subscription.nil?
+    
+    users_subscriptions.where(subscription_id: subscription.id, question_id: question.id).first
   end
 end
