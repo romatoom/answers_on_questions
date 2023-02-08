@@ -162,6 +162,28 @@ RSpec.describe Ability, type: :model do
       end
     end
 
+    context 'can?(:subscribe, user_subscription)' do
+      describe 'when user subscription is new record' do
+        it { should be_able_to :subscribe, UsersSubscription.new }
+      end
+
+      describe 'when user subscription exist' do
+        let!(:user_subscription) { create(:users_subscription) }
+        it { should_not be_able_to :subscribe, user_subscription }
+      end
+    end
+
+    context 'can?(:unsubscribe, user_subscription)' do
+      describe 'when user subscription is new record' do
+        it { should_not be_able_to :unsubscribe, UsersSubscription.new }
+      end
+
+      describe 'when user subscription exist' do
+        let!(:user_subscription) { create(:users_subscription) }
+        it { should be_able_to :unsubscribe, user_subscription }
+      end
+    end
+
     # API V1
     it { should be_able_to [:me, :others], :profile }
   end
