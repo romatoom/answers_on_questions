@@ -41,11 +41,11 @@ class Ability
       !answer.best && user.author_of?(answer.question)
     end
 
-    can :subscribe, UsersSubscription do |user_subscription|
+    can :create, UsersSubscription do |user_subscription|
       user_subscription.new_record?
     end
 
-    can :unsubscribe, UsersSubscription do |user_subscription|
+    can :destroy, UsersSubscription do |user_subscription|
       user_subscription.persisted?
     end
 
