@@ -1,0 +1,7 @@
+h1 Search results: #{@results&.count || 0}
+
+- if @results.present?
+  - @results.each do |result|
+    = render "search_result", result: result
+- else
+  'No results
