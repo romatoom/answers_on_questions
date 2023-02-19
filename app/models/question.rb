@@ -1,7 +1,7 @@
 require 'date'
 
 class Question < ApplicationRecord
-  include Searchable
+  include Searchable::Questions
   include Voteable
   include Commenteable
 
@@ -18,47 +18,4 @@ class Question < ApplicationRecord
   validates :title, uniqueness: true
 
   scope :created_in_the_last_day, -> { where(created_at: 1.day.ago..Time.current) }
-
-  settings index: { number_of_shards: 1 } do
-    mapping dynamic: false do
-      indexes :title, type: :text
-      indexes :body, type: :text
-      indexes :author do
-        indexes :id, type: :integer
-        indexes :email, type: :text
-      end
-    end
-  end
-
-  def as_indexed_json(options = {})
-    self.as_json(
-      only: [:id, :title, :body],
-      include: {
-        author: {
-          only: [:email]
-        }
-      }
-    )
-  end
-
-  def self.search(query)
-    params = {
-      query: {
-        multi_match: {
-          query: query,
-          fields: ['title', 'body', 'author.email'],
-          operator: 'and'
-        }
-      },
-      highlight: {
-        fields: {
-          title: {},
-          body: {},
-          'author.email': {}
-        }
-      }
-    }
-
-    self.__elasticsearch__.search(params)
-  end
 end

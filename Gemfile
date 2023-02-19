@@ -49,6 +49,7 @@ gem 'oj'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'whenever', require: false
+gem 'kaminari'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'

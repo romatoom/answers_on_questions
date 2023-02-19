@@ -5,7 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-
+COUNT_OF_USERS = 10
+COUNT_COMMENTS_FOR_QUESTION = 10
+COUNT_COMMENTS_FOR_ANSWER = 10
 
 def create_random_question_by_user(user)
   title = Faker::Lorem.question
@@ -36,19 +38,19 @@ end
 admin = User.create(email: 'admin@mail.ru', password: '123456789', password_confirmation: '123456789', admin: true)
 
 # Create users
-10.times do |i|
+COUNT_OF_USERS.times do |i|
   User.create(email: "user#{i}@mail.ru", password: '123456789', password_confirmation: '123456789')
 end
 
 # Create questions and answers (and comments for )
 User.all.each do |user|
   question = create_random_question_by_user(user)
-  5.times { create_random_comment_by_random_user_for_commeteable(question) }
+  COUNT_COMMENTS_FOR_QUESTION.times { create_random_comment_by_random_user_for_commeteable(question) }
 
   users_other_than(user).each { |u| create_random_answer_by_user_for_question(u, question) }
 
   question.answers.each do |answer|
-    5.times { create_random_comment_by_random_user_for_commeteable(answer) }
+    COUNT_COMMENTS_FOR_ANSWER.times { create_random_comment_by_random_user_for_commeteable(answer) }
   end
 end
 

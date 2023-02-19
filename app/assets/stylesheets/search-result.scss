@@ -1,0 +1,50 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/_variables.scss";
+
+.search-result {
+  padding: 20px;
+  border-radius: 6px;
+  background-color: $gray-100;
+  border: 1px solid $gray-200;
+  margin-bottom: 15px;
+
+  .type-label {
+    display: block;
+    width: fit-content;
+    color: $white;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 9px;
+    margin-bottom: 10px;
+    background-color: $gray-600;
+
+    &.question {
+      background-color: $blue-600;
+    }
+
+    &.answer {
+      background-color: $red-600;
+    }
+
+    &.user {
+      background-color: $green-600;
+    }
+
+    &.comment {
+      background-color: $orange-600;
+    }
+  }
+
+  .field-label {
+    display: block;
+    width: fit-content;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+
+  em.highlight {
+    display: inline-block;
+    color: $orange-500;
+    border-bottom: 1px dashed $orange-500;
+  }
+}
