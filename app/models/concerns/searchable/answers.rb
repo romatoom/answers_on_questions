@@ -26,6 +26,11 @@ module Searchable
             author: {
               only: [:email]
             }
+          },
+          include: {
+            question: {
+              only: [:id]
+            }
           }
         )
       end

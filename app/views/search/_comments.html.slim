@@ -15,4 +15,5 @@ div.search-result
         'Found in author:
       = sanitize(result.highlight['author.email'][0])
 
-  = link_for_commenteable(commenteable_type: result._source.commenteable_type, commenteable_id: result._source.commenteable_id)
+  = link_for_commenteable(commenteable_type: result._source.commenteable_type, commenteable_id: result._source.commenteable_id, comment_id: result._source.id)
+

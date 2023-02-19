@@ -21,4 +21,4 @@ div.search-result
         'Found in author:
       = sanitize(result.highlight['author.email'][0])
 
-  = link_to "Open question", question_path(result._source.id)
+  = link_to "Show question", question_path(result._source.id), target: 'blank'
