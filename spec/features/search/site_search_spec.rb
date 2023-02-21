@@ -6,7 +6,8 @@ feature 'User can use search', %q{
   I'd like to be able to search
 } do
   background do
-    visit search_index_path
+    visit root_path
+    click_on 'Site search'
   end
 
   describe 'User can find only by question' do

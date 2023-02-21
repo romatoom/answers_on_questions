@@ -20,9 +20,7 @@ module Searchable
           include: {
             author: {
               only: [:email]
-            }
-          },
-          include: {
+            },
             question: {
               only: [:id]
             }

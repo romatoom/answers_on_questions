@@ -40,7 +40,7 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include ApiHelpers, type: :request
-  config.include ElasticsearchHelpers, type: :feature
+  config.include ElasticsearchHelpers
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
