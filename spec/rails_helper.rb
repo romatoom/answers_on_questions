@@ -40,6 +40,7 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include ApiHelpers, type: :request
+  config.include ElasticsearchHelpers, type: :feature
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
@@ -76,6 +77,17 @@ RSpec.configure do |config|
 
   config.after(:all) do
     FileUtils.rm_rf("#{Rails.root}/tmp/storage")
+  end
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 end
 

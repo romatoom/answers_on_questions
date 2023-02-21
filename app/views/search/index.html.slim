@@ -55,20 +55,21 @@ h1 Site search
         id: 'fuzziness_chechbox',
         role: 'switch',
         class: 'form-check-input',
-        checked: search_chechbox_checked?(@search_params, :fuzziness)
+        checked: search_chechbox_checked?(@search_params, :fuzziness, default: false)
 
       = f.label :fuzziness, 'Enable fuzziness?', class: 'form-check-label'
 
 - if @query.length.positive?
   h2 Search results for '#{@query}'
-  h3 Total (limit #{@result_limit}): #{@results_count}
+  h3
+    'Total (limit #{@result_limit}):
+    span.result_count #{@results_count}
 
   .searh-results
     - if @results.present?
       - @results.each do |result|
-        = render "#{result._index}", result: result
+        = render "#{search_template_by_index(result._index)}", result: result
     - else
       'No results
 
   =paginate @results
-

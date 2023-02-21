@@ -87,6 +87,9 @@ group :test do
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 5.0'
+
+  gem 'database_cleaner'
+  gem 'elasticsearch-extensions'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

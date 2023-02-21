@@ -1,4 +1,5 @@
 class Comment < ApplicationRecord
+  include Searchable
   include Searchable::Comments
 
   belongs_to :commenteable, polymorphic: true

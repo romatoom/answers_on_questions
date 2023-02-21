@@ -3,11 +3,6 @@ module Searchable
     extend ActiveSupport::Concern
 
     included do
-      include Elasticsearch::Model
-      include Elasticsearch::Model::Callbacks
-
-      before_save :force_index
-
       settings index: { number_of_shards: 1 } do
         mapping dynamic: false do
           indexes :id, type: :integer
@@ -16,12 +11,6 @@ module Searchable
           indexes :author do
             indexes :id, type: :integer
             indexes :email, type: :text
-          end
-
-          indexes :commenteable do
-            indexes :id, type: :integer
-            indexes :title, type: :text
-            indexes :body, type: :text
           end
         end
       end
@@ -35,10 +24,6 @@ module Searchable
             }
           }
         )
-      end
-
-      def force_index
-        __elasticsearch__.instance_variable_set(:@__changed_model_attributes, nil)
       end
     end
   end

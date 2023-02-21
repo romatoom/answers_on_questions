@@ -19,7 +19,6 @@ class SearchService
 
   def self.call(search_params)
     service = new(search_params)
-    pp service.models_for_search
     Elasticsearch::Model.search(service.search_settings, service.models_for_search)
   end
 

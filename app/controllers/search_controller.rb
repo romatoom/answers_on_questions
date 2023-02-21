@@ -7,7 +7,7 @@ class SearchController < ApplicationController
 
     @results = SearchService.call(search_params)
 
-    @results_count = @results&.count || 0
+    @results_count = @results.count
     @result_limit = SearchService::RESULT_LIMIT
 
     @results = @results.page(params[:page])
