@@ -1,12 +1,14 @@
 require 'date'
 
 class Question < ApplicationRecord
+  include Searchable
+  include Searchable::Questions
   include Voteable
   include Commenteable
 
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
-  belongs_to :author, class_name: "User", foreign_key: "author_id"
+  belongs_to :author, class_name: "User", foreign_key: "author_id", touch: true
   has_one :reward, dependent: :destroy
   has_many_attached :files
 

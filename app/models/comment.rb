@@ -1,4 +1,7 @@
 class Comment < ApplicationRecord
+  include Searchable
+  include Searchable::Comments
+
   belongs_to :commenteable, polymorphic: true
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 

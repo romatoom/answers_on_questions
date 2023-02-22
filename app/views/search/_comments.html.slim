@@ -1,0 +1,19 @@
+div.search-result
+  .type-label.comment
+    'COMMENT ON #{result._source.commenteable_type.upcase}
+
+  - if result.try(:highlight).try(:body)
+    .field
+      span.field-label
+        'Found in body:
+      - result.highlight.body.each do |snippet|
+        p= sanitize(snippet)
+
+  - if result.try(:highlight).try('author.email')
+    .field
+      span.field-label
+        'Found in author:
+      = sanitize(result.highlight['author.email'][0])
+
+  = link_for_commenteable(commenteable_type: result._source.commenteable_type, commenteable_id: result._source.commenteable_id, comment_id: result._source.id)
+

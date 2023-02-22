@@ -1,0 +1,7 @@
+li.page-item {
+
+  &.gap,
+  &.active {
+    pointer-events: none;
+  }
+}

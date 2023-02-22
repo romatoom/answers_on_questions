@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  include Searchable
+  include Searchable::Users
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -48,7 +51,7 @@ class User < ApplicationRecord
   def subscription_by_slug(subscription_slug, question)
     subscription = Subscription.find_by(slug: subscription_slug)
     return nil if subscription.nil?
-    
+
     users_subscriptions.where(subscription_id: subscription.id, question_id: question.id).first
   end
 end

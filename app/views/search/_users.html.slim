@@ -1,0 +1,11 @@
+div.search-result
+  .type-label.user
+    'USER
+
+  - if result.try(:highlight).try(:email)
+    .field
+      span.field-label
+        'Found in email:
+      = sanitize(result.highlight[:email][0])
+
+  /= link_to "Open answer", answer_path(result._source.id)

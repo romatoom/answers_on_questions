@@ -2,7 +2,7 @@
   .fw-bold Comments:
   - if resource.comments.present?
     - resource.comments.each do |c|
-      .comment
+      .comment id="comment_#{c.id}"
         div.comment-author.mb-1
           'Comment by #{c.author.email}
         div.comment-body.mb-1

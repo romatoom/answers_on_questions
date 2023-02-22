@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :search, only: :index
+
   # API
   namespace :api do
     namespace :v1 do
