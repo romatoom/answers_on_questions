@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  include Searchable
-  include Searchable::Users
+  #include Searchable
+  #include Searchable::Users
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

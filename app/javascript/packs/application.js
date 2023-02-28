@@ -7,8 +7,6 @@ import 'jquery'
 window.jQuery = $;
 window.$ = $;
 
-import 'bootstrap-icons/font/bootstrap-icons.css'
-
 import '@nathanvda/cocoon'
 
 import 'bootstrap'

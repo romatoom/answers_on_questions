@@ -1,6 +1,6 @@
 class Answer < ApplicationRecord
-  include Searchable
-  include Searchable::Answers
+  #include Searchable
+  #include Searchable::Answers
   include Voteable
   include Commenteable
 

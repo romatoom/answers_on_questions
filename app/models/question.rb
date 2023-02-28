@@ -1,8 +1,8 @@
 require 'date'
 
 class Question < ApplicationRecord
-  include Searchable
-  include Searchable::Questions
+  #include Searchable
+  #include Searchable::Questions
   include Voteable
   include Commenteable
 

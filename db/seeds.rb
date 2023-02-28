@@ -54,8 +54,8 @@ User.all.each do |user|
   end
 end
 
-SearchService::MODELS.each do |model|
-  model.__elasticsearch__.create_index!(index: model.index_name)
-  model.__elasticsearch__.create_index!(index: model.index_name, force: true)
-  model.import(force: true)
-end
+#SearchService::MODELS.each do |model|
+#  model.__elasticsearch__.create_index!(index: model.index_name)
+#  model.__elasticsearch__.create_index!(index: model.index_name, force: true)
+#  model.import(force: true)
+#end
