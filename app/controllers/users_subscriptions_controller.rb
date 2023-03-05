@@ -9,6 +9,7 @@ class UsersSubscriptionsController < ApplicationController
     authorize! :create, user_subscription
 
     current_user.users_subscriptions.create!(subscription_id: subscription.id, question_id: question.id)
+
     redirect_to question_path(question), success: "You have subscribed to be '#{subscription.title}' subscription."
   end
 
@@ -17,6 +18,7 @@ class UsersSubscriptionsController < ApplicationController
     authorize! :destroy, user_subscription
 
     user_subscription.destroy!
+
     redirect_to question_path(user_subscription.question), success: "You have unsubscribed to be '#{user_subscription.subscription.title}' subscription."
   end
 end

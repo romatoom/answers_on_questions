@@ -30,6 +30,7 @@ module AnswersOnQuestions
                        controller_specs: true
     end
 
-    config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expire_in: 60.minutes }
+    # config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expire_in: 60.minutes }
+    config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/0/cache', expire_in: 60.minutes }
   end
 end

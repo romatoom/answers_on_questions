@@ -28,8 +28,8 @@ class QuestionsController < ApplicationController
     @answer.links.new
     @answers = @question.answers.sort_by_best
 
-    @user_subscription_new_answer = current_user&.subscription_by_slug("new_answer", @question) || UsersSubscription.new
     @user_subscription_change_question = current_user&.subscription_by_slug("change_question", @question) || UsersSubscription.new
+    @user_subscription_new_answer = current_user&.subscription_by_slug("new_answer", @question) || UsersSubscription.new
 
     gon.push({
       :sid => session&.id&.public_id,
