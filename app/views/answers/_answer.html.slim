@@ -1,59 +1,60 @@
-li id="answer_#{answer.id}" class='answer' class=('best' if answer.best)
-  - if answer.best
-    div.text-success.mb-3 Best answer
+- cache answer do
+  li id="answer_#{answer.id}" class='answer' class=('best' if answer.best)
+    - if answer.best
+      div.text-success.mb-3 Best answer
 
-  = render 'shared/vote', voteable: answer
+    = render 'shared/vote', voteable: answer
 
-  = answer.body
+    = answer.body
 
-  div.mb-3
-    'Files:
-    = render "shared/file_list", resource: answer, is_uploaded_files: false
-
-  - if answer.links.present?
     div.mb-3
-      = render "shared/links", links: answer.links, with_matching: true
+      'Files:
+      = render "shared/file_list", resource: answer, is_uploaded_files: false
 
-  - if can?(:destroy, answer)
-    = button_to 'Remove', answer_path(answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
-    = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
-
-  - if can?(:mark_answer_as_best, answer)
-    = button_to 'Mark at best', mark_answer_as_best_answer_path(answer), remote: true, class: 'btn btn-success mark_best_answe mb-3'
-
-  - if can?(:update, answer)
-    = form_with model: answer, method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
-      div.answer-errors
-        = render 'shared/errors', resource: answer
+    - if answer.links.present?
       div.mb-3
-        = f.label :body, 'Body', class: 'form-label'
-        = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
+        = render "shared/links", links: answer.links, with_matching: true
 
-      div.mb-3
-        'Uploaded files:
-        = render "shared/file_list", resource: answer, is_uploaded_files: true
+    - if can?(:destroy, answer)
+      = button_to 'Remove', answer_path(answer), remote: true, method: :delete, class: 'btn btn-danger remove_answer_btn'
+      = button_to 'Edit', '#', class: 'btn btn-primary edit_answer_btn', data: { answer_id: answer.id }
 
-      div.mb-3
-        = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
+    - if can?(:mark_answer_as_best, answer)
+      = button_to 'Mark at best', mark_answer_as_best_answer_path(answer), remote: true, class: 'btn btn-success mark_best_answe mb-3'
 
-        label for="answer_files_#{answer.id}"
-          = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
+    - if can?(:update, answer)
+      = form_with model: answer, method: :patch, local: false, class: 'edit_form d-none', html: { id: "edit-answer-form-#{answer.id}" } do |f|
+        div.answer-errors
+          = render 'shared/errors', resource: answer
+        div.mb-3
+          = f.label :body, 'Body', class: 'form-label'
+          = f.text_area :body, id: :answer_body, rows: 10, class: 'form-control'
 
-        = f.file_field :files, id: "answer_files_#{answer.id}", class: 'form-control form-control-sm answer_files d-none', data: { resource_id: answer.id }, multiple: true, direct_upload: true
+        div.mb-3
+          'Uploaded files:
+          = render "shared/file_list", resource: answer, is_uploaded_files: true
 
-        p id="files-area"
-          span id="filesList"
-            span id="files-names"
+        div.mb-3
+          = f.text_field :file_list_for_delete, class: 'file-list-for-delete d-none'
 
-      div.mb-2
-        div.mb-1 Links
-        #links.mb-5
-          = f.fields_for :links do |link|
-            = render 'link_fields', f: link
-          .links
-            = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
+          label for="answer_files_#{answer.id}"
+            = content_tag "a", "+ Add files", class: "btn btn-primary text-light", role: 'button'
 
-      = f.submit 'Save', class: 'btn btn-success me-2'
-      = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }
+          = f.file_field :files, id: "answer_files_#{answer.id}", class: 'form-control form-control-sm answer_files d-none', data: { resource_id: answer.id }, multiple: true, direct_upload: true
 
-  = render 'shared/comments', resource: answer
+          p id="files-area"
+            span id="filesList"
+              span id="files-names"
+
+        div.mb-2
+          div.mb-1 Links
+          #links.mb-5
+            = f.fields_for :links do |link|
+              = render 'link_fields', f: link
+            .links
+              = link_to_add_association '+ Add link', f, :links, class: 'btn btn-primary'
+
+        = f.submit 'Save', class: 'btn btn-success me-2'
+        = link_to 'Cancel', '#', class: 'btn btn-secondary cancel-edit-answer', data: { answer_id: answer.id }
+
+    = render 'shared/comments', resource: answer

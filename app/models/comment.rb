@@ -2,7 +2,7 @@ class Comment < ApplicationRecord
   #include Searchable
   #include Searchable::Comments
 
-  belongs_to :commenteable, polymorphic: true
+  belongs_to :commenteable, polymorphic: true, touch: true
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 
   validates :commenteable, :author, :body, presence: true
