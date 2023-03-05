@@ -19,8 +19,8 @@ class Answer < ApplicationRecord
 
   def mark_as_best
 		transaction do
-			Answer.where(question_id: question.id).update_all(best: false)
-			update(best: true)
+			Answer.where(question_id: question.id).update_all(best: false, updated_at: DateTime.now)
+			update(best: true, updated_at: DateTime.now)
 		end
 
     if question.reward.present?

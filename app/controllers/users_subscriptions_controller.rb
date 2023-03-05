@@ -9,6 +9,8 @@ class UsersSubscriptionsController < ApplicationController
     authorize! :create, user_subscription
 
     current_user.users_subscriptions.create!(subscription_id: subscription.id, question_id: question.id)
+    update_question_updated_at(question)
+
     redirect_to question_path(question), success: "You have subscribed to be '#{subscription.title}' subscription."
   end
 
@@ -16,7 +18,17 @@ class UsersSubscriptionsController < ApplicationController
     user_subscription = UsersSubscription.find(params[:id])
     authorize! :destroy, user_subscription
 
+    question = user_subscription.question
     user_subscription.destroy!
+
+    update_question_updated_at(question)
+
     redirect_to question_path(user_subscription.question), success: "You have unsubscribed to be '#{user_subscription.subscription.title}' subscription."
+  end
+
+  private
+
+  def update_question_updated_at(question)
+    question.update(updated_at: DateTime.now)
   end
 end
